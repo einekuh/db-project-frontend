@@ -1,5 +1,5 @@
 import useAuthStore from "@/authStore";
-import { Button, HStack } from "@chakra-ui/react";
+import { Box, Button, HStack } from "@chakra-ui/react";
 import { CgProfile } from "react-icons/cg";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -11,7 +11,9 @@ const Auth = () => {
     return (
       <HStack margin={2} width={100}>
         <Button
-          size="2xs"
+          variant="outline"
+          marginRight={1}
+          size="xs"
           onClick={() => {
             setStatus("anonymous");
             navigate("/");
@@ -19,15 +21,24 @@ const Auth = () => {
         >
           Log Out
         </Button>
-        <Link to="/profile">
-          <CgProfile size={25} />
-        </Link>
+        <Box
+          _hover={{
+            transform: "scale(1.1)",
+            transition: "transform .15s ease-in",
+            cursor: "pointer",
+          }}
+        >
+          <Link to="/profile">
+            <CgProfile size={25} />
+          </Link>
+        </Box>
       </HStack>
     );
   return (
     <HStack margin={2} width={100}>
       <Button
-        size="2xs"
+        variant="outline"
+        size="xs"
         onClick={() => {
           navigate("/signup");
         }}
@@ -35,7 +46,8 @@ const Auth = () => {
         Sign Up
       </Button>
       <Button
-        size="2xs"
+        variant="outline"
+        size="xs"
         onClick={() => {
           navigate("/login");
         }}

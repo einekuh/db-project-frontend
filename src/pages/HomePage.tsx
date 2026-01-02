@@ -1,24 +1,33 @@
+import BrandSelector from "@/components/BrandSelector";
 import CarGrid from "@/components/CarGrid";
+import CarTypeSelector from "@/components/CarTypeSelector";
+import ColorSelector from "@/components/ColorSelector";
+import PriceSelector from "@/components/PriceSelector";
 import { Grid, GridItem } from "@chakra-ui/react";
 
 const HomePage = () => {
   return (
     <Grid
       templateAreas={{
-        base: `"main"`,
+        base: `"aside" "main"`,
         lg: `"aside main"`,
       }}
       templateColumns={{
         base: "1fr",
-        lg: "200px 1fr",
+        lg: "300px 1fr",
       }}
     >
       <GridItem
         area="aside"
         paddingX={5}
-        display={{ base: "none", lg: "block" }}
+        display={{ base: "block", lg: "block" }}
+        width={300}
+        marginLeft={4}
       >
-        aside
+        <BrandSelector />
+        <ColorSelector />
+        <CarTypeSelector />
+        <PriceSelector />
       </GridItem>
 
       <GridItem area="main">

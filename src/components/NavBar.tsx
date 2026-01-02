@@ -1,30 +1,44 @@
 import { Box, HStack } from "@chakra-ui/react";
 import Auth from "./Auth";
-import { IoCarSport } from "react-icons/io5";
+import { IoCarSportOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import ColorModeSwitch from "./ColorModeSwitch";
 import { CiSquarePlus } from "react-icons/ci";
 import SearchInput from "./SearchInput";
-import { IoMdHeart } from "react-icons/io";
+import { IoMdHeartEmpty } from "react-icons/io";
 
 const NavBar = () => {
   return (
     <Box>
       <HStack justifyContent="space-between">
-        <Box marginX={4}>
+        <Box marginLeft={6}>
           <Link to="/">
-            <IoCarSport size={30} />
+            <IoCarSportOutline size={30} />
           </Link>
         </Box>
         <SearchInput />
-        <Box marginX={1}>
+        <Box
+          marginX={1}
+          _hover={{
+            transform: "scale(1.1)",
+            transition: "transform .15s ease-in",
+            cursor: "pointer",
+          }}
+        >
           <Link to="/favorites">
-            <IoMdHeart />
+            <IoMdHeartEmpty size={25} />
           </Link>
         </Box>
-        <Box marginX={1}>
+        <Box
+          marginX={1}
+          _hover={{
+            transform: "scale(1.1)",
+            transition: "transform .15s ease-in",
+            cursor: "pointer",
+          }}
+        >
           <Link to="/insert">
-            <CiSquarePlus />
+            <CiSquarePlus size={25} />
           </Link>
         </Box>
 

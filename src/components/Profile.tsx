@@ -1,4 +1,4 @@
-import { Button, Field, Heading, Input, Stack } from "@chakra-ui/react";
+import { Button, Field, Heading, HStack, Input, Stack } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -53,12 +53,17 @@ const Profile = () => {
           <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
         </Field.Root>
 
-        <Button
-          type={edit ? "submit" : "button"}
-          onClick={() => setEdit(!edit)}
-        >
-          {edit ? "Submit" : "Edit"}
-        </Button>
+        <HStack>
+          <Button
+            type={edit ? "submit" : "button"}
+            onClick={() => setEdit(!edit)}
+          >
+            {edit ? "Submit" : "Edit"}
+          </Button>
+          <Button type={"button"} hidden={!edit} onClick={() => setEdit(!edit)}>
+            Cancel
+          </Button>
+        </HStack>
       </Stack>
     </form>
   );

@@ -9,7 +9,7 @@ const SearchInput = () => {
   const endElement = value ? (
     <CloseButton
       variant="plain"
-      size="xs"
+      size="2xs"
       onClick={() => {
         setValue("");
         inputRef.current?.focus();
@@ -29,7 +29,7 @@ const SearchInput = () => {
       width="60%"
     >
       <Input
-        marginY={2}
+        marginY={3}
         marginLeft={2}
         size="2xs"
         ref={inputRef}

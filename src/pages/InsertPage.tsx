@@ -1,26 +1,24 @@
 import useAuthStore from "@/authStore";
-import FavoriteGrid from "@/components/FavoriteGrid";
+import InsertForm from "@/components/InsertForm";
 import { Box, Heading } from "@chakra-ui/react";
 
-const FavoritesPage = () => {
+const InsertPage = () => {
   const authStatus = useAuthStore((s) => s.authStatus);
   if (authStatus !== "authenticated")
     return (
       <Box marginX="40%" marginY="5%">
-        <Heading>Log in to see your favorites!</Heading>
+        <Heading>Log in to insert a Car!</Heading>
       </Box>
     );
   return (
     <>
-      <Box marginX="15%">
-        <Box marginX="2%">
-          <Heading>Here are your Favorites!</Heading>
+      <Box justifyItems="center">
+        <Box marginTop="5%">
+          <InsertForm />
         </Box>
-
-        <FavoriteGrid />
       </Box>
     </>
   );
 };
 
-export default FavoritesPage;
+export default InsertPage;

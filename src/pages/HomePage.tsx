@@ -1,3 +1,4 @@
+import CarGrid from "@/components/CarGrid";
 import { Grid, GridItem } from "@chakra-ui/react";
 
 const HomePage = () => {
@@ -16,45 +17,12 @@ const HomePage = () => {
         area="aside"
         paddingX={5}
         display={{ base: "none", lg: "block" }}
-        backgroundColor="yellow"
       >
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
-        aside <br />
+        aside
       </GridItem>
 
-      <GridItem area="main" backgroundColor="green">
-        main
+      <GridItem area="main">
+        <CarGrid />
       </GridItem>
     </Grid>
   );

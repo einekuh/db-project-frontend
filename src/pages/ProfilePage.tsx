@@ -1,14 +1,14 @@
-import LoginForm from "@/components/LoginForm";
+import Profile from "@/components/Profile";
 import { Box } from "@chakra-ui/react";
 
-const LoginPage = () => {
+const ProfilePage = () => {
   return (
     <Box justifyItems="center">
       <Box marginTop="5%">
-        <LoginForm />
+        <Profile />
       </Box>
     </Box>
   );
 };
 
-export default LoginPage;
+export default ProfilePage;

@@ -8,6 +8,7 @@ const SearchInput = () => {
 
   const endElement = value ? (
     <CloseButton
+      variant="plain"
       size="xs"
       onClick={() => {
         setValue("");
@@ -25,7 +26,7 @@ const SearchInput = () => {
           <BsSearch />
         </Box>
       }
-      width="75%"
+      width="60%"
     >
       <Input
         marginY={2}

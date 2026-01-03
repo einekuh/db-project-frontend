@@ -1,4 +1,14 @@
-import { Button, Field, Heading, HStack, Input, Stack } from "@chakra-ui/react";
+import {
+  Button,
+  Field,
+  Heading,
+  HStack,
+  Input,
+  InputGroup,
+  Span,
+  Stack,
+  Textarea,
+} from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,7 +20,10 @@ const schema = z.object({
   firstName: z.string(),
   lastName: z.string(),
   username: z.string(),
+  about: z.string(),
 });
+
+const MAX_CHARACTERS = 500;
 
 type ProfileFormData = z.infer<typeof schema>;
 
@@ -24,6 +37,8 @@ const Profile = () => {
   const onSubmit = handleSubmit((data) => {
     console.log(data);
   });
+
+  const [value, setValue] = useState("");
 
   return (
     <form onSubmit={onSubmit}>
@@ -52,7 +67,28 @@ const Profile = () => {
           <Input {...register("email")} disabled={!edit} />
           <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
         </Field.Root>
-
+        <Field.Root invalid={!!errors.about} width={{ base: 300, md: 500 }}>
+          <Field.Label>About</Field.Label>
+          <InputGroup
+            endElement={
+              <Span color="fg.muted" textStyle="xs">
+                {value.length} / {MAX_CHARACTERS}
+              </Span>
+            }
+          >
+            <Textarea
+              {...register("about")}
+              variant="outline"
+              autoresize
+              placeholder="Write something about yourself!"
+              maxLength={MAX_CHARACTERS}
+              onChange={(e) => {
+                setValue(e.currentTarget.value.slice(0, MAX_CHARACTERS));
+              }}
+            />
+          </InputGroup>
+          <Field.ErrorText>{errors.about?.message}</Field.ErrorText>
+        </Field.Root>
         <HStack>
           <Button
             type={edit ? "submit" : "button"}

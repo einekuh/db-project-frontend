@@ -47,12 +47,6 @@ const SignUpForm = () => {
           <Field.ErrorText>{errors.lastName?.message}</Field.ErrorText>
         </Field.Root>
 
-        <Field.Root invalid={!!errors.username} width={{ base: 300, md: 500 }}>
-          <Field.Label>Username</Field.Label>
-          <Input {...register("username")} />
-          <Field.ErrorText>{errors.username?.message}</Field.ErrorText>
-        </Field.Root>
-
         <Field.Root invalid={!!errors.email} width={{ base: 300, md: 500 }}>
           <Field.Label>E-Mail</Field.Label>
           <Input {...register("email")} />
@@ -63,6 +57,12 @@ const SignUpForm = () => {
           <Field.Label>Password</Field.Label>
           <PasswordInput {...register("password")} />
           <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
+        </Field.Root>
+
+        <Field.Root invalid={!!errors.username} width={{ base: 300, md: 500 }}>
+          <Field.Label>Username</Field.Label>
+          <Input {...register("username")} />
+          <Field.ErrorText>{errors.username?.message}</Field.ErrorText>
         </Field.Root>
         <Button type="submit">Submit</Button>
       </Stack>

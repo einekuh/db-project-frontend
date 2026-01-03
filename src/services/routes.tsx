@@ -1,3 +1,6 @@
+import CarDetailsPage from "@/pages/CarDetailsPage";
+import ChatPage from "@/pages/ChatPage";
+import ChatsPage from "@/pages/ChatsPage";
 import ErrorPage from "@/pages/ErrorPage";
 import FavoritesPage from "@/pages/FavoritesPage";
 import HomePage from "@/pages/HomePage";
@@ -37,6 +40,20 @@ const router = createBrowserRouter([
       {
         path: "insert",
         element: <InsertPage />,
+      },
+      {
+        path: "cars",
+        element: <CarDetailsPage />,
+      },
+      {
+        path: "chats/",
+        element: <ChatsPage />,
+        children: [
+          {
+            path: "chat",
+            element: <ChatPage />,
+          },
+        ],
       },
     ],
   },

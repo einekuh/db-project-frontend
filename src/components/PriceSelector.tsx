@@ -12,7 +12,8 @@ const PriceSelector = () => {
       <Slider.RootProvider value={slider} width="100%" size="sm">
         <Slider.Label>Select price range</Slider.Label>
         <HStack>
-          <Code>{slider.value[0]}</Code> <Code>{slider.value[1]}</Code>€
+          <Code>{slider.value[0].toLocaleString("de-DE")}</Code>{" "}
+          <Code>{slider.value[1].toLocaleString("de-DE")}</Code>€
         </HStack>
         <Slider.Control>
           <Slider.Track>

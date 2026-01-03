@@ -13,7 +13,7 @@ const InsertPage = () => {
   return (
     <>
       <Box justifyItems="center">
-        <Box marginTop="5%">
+        <Box marginTop="5%" marginBottom="5%">
           <InsertForm />
         </Box>
       </Box>

@@ -1,6 +1,7 @@
 import { SimpleGrid } from "@chakra-ui/react";
-import CarCardSkeleton from "./CarCardSkeleton";
+
 import CarCardContainer from "./CarCardContainer";
+import CarCard from "./CarCard";
 
 const FavoriteGrid = () => {
   const skeletons = [
@@ -12,7 +13,7 @@ const FavoriteGrid = () => {
       <SimpleGrid padding="10px" columns={{ sm: 1, md: 2 }}>
         {skeletons.map((skeleton) => (
           <CarCardContainer key={skeleton}>
-            <CarCardSkeleton />
+            <CarCard />
           </CarCardContainer>
         ))}
       </SimpleGrid>

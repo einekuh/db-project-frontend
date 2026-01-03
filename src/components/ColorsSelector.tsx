@@ -1,3 +1,4 @@
+import { colors } from "@/data/Colors";
 import {
   Badge,
   Combobox,
@@ -6,34 +7,14 @@ import {
   createListCollection,
 } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
-const carTypes = [
-  "Cabriolet",
-  "Convertible",
-  "Coupe",
-  "Crossover",
-  "Hatchback",
-  "Limousine",
-  "Micro",
-  "Minivan",
-  "Off-road",
-  "Pickup",
-  "Roadster",
-  "Sedan",
-  "Sport",
-  "Sportwagen",
-  "SUV",
-  "Targa",
-  "Van",
-  "Wagon",
-];
 
-const CarTypeSelector = () => {
+const ColorsSelector = () => {
   const [searchValue, setSearchValue] = useState("");
-  const [selectedCarType, setSelectedCarTypes] = useState<string[]>([]);
+  const [selectedColors, setSelectedColors] = useState<string[]>([]);
 
   const filteredItems = useMemo(
     () =>
-      carTypes.filter((item) =>
+      colors.filter((item) =>
         item.toLowerCase().includes(searchValue.toLowerCase())
       ),
     [searchValue]
@@ -45,14 +26,14 @@ const CarTypeSelector = () => {
   );
 
   const handleValueChange = (details: Combobox.ValueChangeDetails) => {
-    setSelectedCarTypes(details.value);
+    setSelectedColors(details.value);
   };
   return (
     <Combobox.Root
       multiple
       closeOnSelect
       width="100%"
-      value={selectedCarType}
+      value={selectedColors}
       collection={collection}
       onValueChange={handleValueChange}
       onInputValueChange={(details) => setSearchValue(details.inputValue)}
@@ -61,13 +42,13 @@ const CarTypeSelector = () => {
       marginRight={10}
     >
       <Wrap gap="2">
-        {selectedCarType.map((type) => (
-          <Badge key={type}>{type}</Badge>
+        {selectedColors.map((color) => (
+          <Badge key={color}>{color}</Badge>
         ))}
       </Wrap>
 
       <Combobox.Control>
-        <Combobox.Input placeholder="Search car type" />
+        <Combobox.Input placeholder="Search color" />
         <Combobox.IndicatorGroup>
           <Combobox.Trigger />
           <Combobox.ClearTrigger />
@@ -84,7 +65,7 @@ const CarTypeSelector = () => {
                   <Combobox.ItemIndicator />
                 </Combobox.Item>
               ))}
-              <Combobox.Empty>No car types found</Combobox.Empty>
+              <Combobox.Empty>No colors found</Combobox.Empty>
             </Combobox.ItemGroup>
           </Combobox.Content>
         </Combobox.Positioner>
@@ -93,4 +74,4 @@ const CarTypeSelector = () => {
   );
 };
 
-export default CarTypeSelector;
+export default ColorsSelector;

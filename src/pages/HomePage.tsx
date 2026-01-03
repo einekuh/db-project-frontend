@@ -1,7 +1,8 @@
-import BrandSelector from "@/components/BrandSelector";
+import BrandsSelector from "@/components/BrandsSelector";
 import CarGrid from "@/components/CarGrid";
-import CarTypeSelector from "@/components/CarTypeSelector";
-import ColorSelector from "@/components/ColorSelector";
+import CarTypesSelector from "@/components/CarTypesSelector";
+import ColorsSelector from "@/components/ColorsSelector";
+import ConditionsSelector from "@/components/ConditionsSelector";
 import PriceSelector from "@/components/PriceSelector";
 import { Grid, GridItem } from "@chakra-ui/react";
 
@@ -24,10 +25,11 @@ const HomePage = () => {
         width={300}
         marginLeft={4}
       >
-        <BrandSelector />
-        <ColorSelector />
-        <CarTypeSelector />
+        <BrandsSelector />
+        <ColorsSelector />
+        <CarTypesSelector />
         <PriceSelector />
+        <ConditionsSelector />
       </GridItem>
 
       <GridItem area="main">

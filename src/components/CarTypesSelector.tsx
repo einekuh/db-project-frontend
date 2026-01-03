@@ -1,4 +1,4 @@
-import { carTypes } from "@/data/CarTypes";
+import carTypes from "@/data/CarTypes";
 import {
   Badge,
   Combobox,
@@ -10,7 +10,7 @@ import { useMemo, useState } from "react";
 
 const CarTypesSelector = () => {
   const [searchValue, setSearchValue] = useState("");
-  const [selectedCarType, setSelectedCarTypes] = useState<string[]>([]);
+  const [selectedCarTypes, setSelectedCarTypes] = useState<string[]>([]);
 
   const filteredItems = useMemo(
     () =>
@@ -27,13 +27,14 @@ const CarTypesSelector = () => {
 
   const handleValueChange = (details: Combobox.ValueChangeDetails) => {
     setSelectedCarTypes(details.value);
+    console.log(selectedCarTypes);
   };
   return (
     <Combobox.Root
       multiple
       closeOnSelect
       width="100%"
-      value={selectedCarType}
+      value={selectedCarTypes}
       collection={collection}
       onValueChange={handleValueChange}
       onInputValueChange={(details) => setSearchValue(details.inputValue)}
@@ -42,7 +43,7 @@ const CarTypesSelector = () => {
       marginRight={10}
     >
       <Wrap gap="2">
-        {selectedCarType.map((type) => (
+        {selectedCarTypes.map((type) => (
           <Badge key={type}>{type}</Badge>
         ))}
       </Wrap>

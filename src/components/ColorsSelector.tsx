@@ -1,4 +1,4 @@
-import { colors } from "@/data/Colors";
+import colors from "@/data/Colors";
 import {
   Badge,
   Combobox,
@@ -27,6 +27,7 @@ const ColorsSelector = () => {
 
   const handleValueChange = (details: Combobox.ValueChangeDetails) => {
     setSelectedColors(details.value);
+    console.log(selectedColors);
   };
   return (
     <Combobox.Root

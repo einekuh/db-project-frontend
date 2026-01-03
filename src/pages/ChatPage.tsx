@@ -1,62 +1,44 @@
-import { Box } from "@chakra-ui/react";
+import MessageCard from "@/components/MessageCard";
+import { messages } from "@/entities/Message";
+import { Box, Button, Input, InputGroup, ScrollArea } from "@chakra-ui/react";
+import { useParams } from "react-router-dom";
+
+const myId = "1b2c3d4e-5f6a-7b8c-9d0e-1f2a3b4c5d6e";
 
 const ChatPage = () => {
+  const { id } = useParams();
+
   return (
-    <Box height="20">
-      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Numquam hic
-      nihil dicta delectus dignissimos cumque illum! In explicabo veniam dolor
-      atque ullam. Itaque, praesentium magnam totam error et ad maxime. Lorem
-      ipsum dolor sit amet consectetur, adipisicing elit. Numquam hic nihil
-      dicta delectus dignissimos cumque illum! In explicabo veniam dolor atque
-      ullam. Itaque, praesentium magnam totam error et ad maxime.Lorem ipsum
-      dolor sit amet consectetur, adipisicing elit. Numquam hic nihil dicta
-      delectus dignissimos cumque illum! In explicabo veniam dolor atque ullam.
-      Itaque, praesentium magnam totam error et ad maxime.Lorem ipsum dolor sit
-      amet consectetur, adipisicing elit. Numquam hic nihil dicta delectus
-      dignissimos cumque illum! In explicabo veniam dolor atque ullam. Itaque,
-      praesentium magnam totam error et ad maxime.Lorem ipsum dolor sit amet
-      consectetur, adipisicing elit. Numquam hic nihil dicta delectus
-      dignissimos cumque illum! In explicabo veniam dolor atque ullam. Itaque,
-      praesentium magnam totam error et ad maxime.Lorem ipsum dolor sit amet
-      consectetur, adipisicing elit. Numquam hic nihil dicta delectus
-      dignissimos cumque illum! In explicabo veniam dolor atque ullam. Itaque,
-      praesentium magnam totam error et ad maxime.Lorem ipsum dolor sit amet
-      consectetur, adipisicing elit. Numquam hic nihil dicta delectus
-      dignissimos cumque illum! In explicabo veniam dolor atque ullam. Itaque,
-      praesentium magnam totam error et ad maxime.Lorem ipsum dolor sit amet
-      consectetur, adipisicing elit. Numquam hic nihil dicta delectus
-      dignissimos cumque illum! In explicabo veniam dolor atque ullam. Itaque,
-      praesentium magnam totam error et ad maxime.Lorem ipsum dolor sit amet
-      consectetur, adipisicing elit. Numquam hic nihil dicta delectus
-      dignissimos cumque illum! In explicabo veniam dolor atque ullam. Itaque,
-      praesentium magnam totam error et ad maxime.Lorem ipsum dolor sit amet
-      consectetur, adipisicing elit. Numquam hic nihil dicta delectus
-      dignissimos cumque illum! In explicabo veniam dolor atque ullam. Itaque,
-      praesentium magnam totam error et ad maxime.Lorem ipsum dolor sit amet
-      consectetur, adipisicing elit. Numquam hic nihil dicta delectus
-      dignissimos cumque illum! In explicabo veniam dolor atque ullam. Itaque,
-      praesentium magnam totam error et ad maxime.Lorem ipsum dolor sit amet
-      consectetur, adipisicing elit. Numquam hic nihil dicta delectus
-      dignissimos cumque illum! In explicabo veniam dolor atque ullam. Itaque,
-      praesentium magnam totam error et ad maxime.Lorem ipsum dolor sit amet
-      consectetur, adipisicing elit. Numquam hic nihil dicta delectus
-      dignissimos cumque illum! In explicabo veniam dolor atque ullam. Itaque,
-      praesentium magnam totam error et ad maxime.Lorem ipsum dolor sit amet
-      consectetur, adipisicing elit. Numquam hic nihil dicta delectus
-      dignissimos cumque illum! In explicabo veniam dolor atque ullam. Itaque,
-      praesentium magnam totam error et ad maxime.Lorem ipsum dolor sit amet
-      consectetur, adipisicing elit. Numquam hic nihil dicta delectus
-      dignissimos cumque illum! In explicabo veniam dolor atque ullam. Itaque,
-      praesentium magnam totam error et ad maxime.Lorem ipsum dolor sit amet
-      consectetur, adipisicing elit. Numquam hic nihil dicta delectus
-      dignissimos cumque illum! In explicabo veniam dolor atque ullam. Itaque,
-      praesentium magnam totam error et ad maxime.Lorem ipsum dolor sit amet
-      consectetur, adipisicing elit. Numquam hic nihil dicta delectus
-      dignissimos cumque illum! In explicabo veniam dolor atque ullam. Itaque,
-      praesentium magnam totam error et ad maxime.Lorem ipsum dolor sit amet
-      consectetur, adipisicing elit. Numquam hic nihil dicta delectus
-      dignissimos cumque illum! In explicabo veniam dolor atque ullam. Itaque,
-      praesentium magnam totam error et ad maxime.
+    <Box h="100vh" marginLeft={3} display="flex" flexDirection="column">
+      {/* Messages */}
+      <Box flex="1" minH={0}>
+        <ScrollArea.Root h="100%" variant="always">
+          <ScrollArea.Viewport h="100%">
+            <ScrollArea.Content paddingEnd="3" textStyle="sm">
+              {messages
+                .filter((m) => m.chatId === id)
+                .map((message) => (
+                  <MessageCard
+                    key={message.id}
+                    message={message}
+                    isMine={message.senderId === myId}
+                  />
+                ))}
+            </ScrollArea.Content>
+          </ScrollArea.Viewport>
+          <ScrollArea.Scrollbar />
+        </ScrollArea.Root>
+      </Box>
+
+      {/* Input */}
+      <Box py={3} pr={3}>
+        <InputGroup>
+          <>
+            <Input placeholder="Type a message..." />
+            <Button>Send</Button>
+          </>
+        </InputGroup>
+      </Box>
     </Box>
   );
 };

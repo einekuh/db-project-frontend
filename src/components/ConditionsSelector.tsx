@@ -1,19 +1,29 @@
-import conditionObjects from "@/data/Conditions";
-import { Portal, Select } from "@chakra-ui/react";
-import { useState } from "react";
+import conditions from "@/data/Conditions";
+import { Portal, Select, createListCollection } from "@chakra-ui/react";
+import { useMemo, useState } from "react";
 
 const ConditionsSelector = () => {
+  const conditionCollection = useMemo(
+    () => createListCollection({ items: conditions }),
+    []
+  );
+
   const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
+
   return (
     <Select.Root
-      collection={conditionObjects}
-      defaultValue={["spirited_away"]}
+      collection={conditionCollection}
+      value={selectedConditions}
+      onValueChange={({ value }) => {
+        setSelectedConditions(value);
+        console.log(selectedConditions);
+      }}
       variant="subtle"
       marginTop={7}
       marginRight={10}
       width="100%"
       multiple
-      onSelect={(e) => setSelectedConditions([...selectedConditions, e.value])}
+      closeOnSelect
     >
       <Select.HiddenSelect />
 
@@ -26,12 +36,13 @@ const ConditionsSelector = () => {
           <Select.Indicator />
         </Select.IndicatorGroup>
       </Select.Control>
+
       <Portal>
         <Select.Positioner>
           <Select.Content>
-            {conditionObjects.items.map((condition) => (
-              <Select.Item item={condition} key={condition.value}>
-                {condition.label}
+            {conditions.map((condition) => (
+              <Select.Item key={condition} item={condition}>
+                {condition}
                 <Select.ItemIndicator />
               </Select.Item>
             ))}

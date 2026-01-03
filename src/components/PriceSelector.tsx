@@ -6,6 +6,7 @@ const PriceSelector = () => {
 
     max: 100_000,
     step: 500,
+    onValueChangeEnd: () => console.log(slider.value),
   });
   return (
     <Stack align="flex-start" marginTop={5}>

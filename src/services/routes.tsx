@@ -50,7 +50,7 @@ const router = createBrowserRouter([
         element: <ChatsPage />,
         children: [
           {
-            path: "chat",
+            path: ":id",
             element: <ChatPage />,
           },
         ],

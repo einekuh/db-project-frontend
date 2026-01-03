@@ -1,26 +1,4 @@
-const carTypeObjects = [
-  { label: "Cabriolet", value: "cabriolet" },
-  { label: "Convertible", value: "convertible" },
-  { label: "Coupe", value: "coupe" },
-  { label: "Crossover", value: "crossover" },
-  { label: "Hatchback", value: "hatchback" },
-  { label: "Limousine", value: "limousine" },
-  { label: "Micro", value: "micro" },
-  { label: "Minivan", value: "minivan" },
-  { label: "Off-road", value: "off-road" },
-  { label: "Pickup", value: "pickup" },
-  { label: "Roadster", value: "roadster" },
-  { label: "Sedan", value: "sedan" },
-  { label: "Sport", value: "sport" },
-  { label: "Sportwagen", value: "sportwagen" },
-  { label: "SUV", value: "suv" },
-  { label: "Targa", value: "targa" },
-  { label: "Van", value: "van" },
-  { label: "Wagon", value: "wagon" },
-  { label: "Other", value: "other" },
-];
-
-export const carTypes = [
+const carTypes = [
   "Cabriolet",
   "Convertible",
   "Coupe",
@@ -41,4 +19,4 @@ export const carTypes = [
   "Wagon",
 ];
 
-export default carTypeObjects;
+export default carTypes;

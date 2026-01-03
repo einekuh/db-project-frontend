@@ -1,4 +1,4 @@
-import { brands } from "@/data/Brands";
+import brands from "@/data/Brands";
 import {
   Badge,
   Combobox,

@@ -24,6 +24,7 @@ const HomePage = () => {
         display={{ base: "block", lg: "block" }}
         width={300}
         marginLeft={4}
+        position={{ lg: "fixed" }}
       >
         <BrandsSelector />
         <ColorsSelector />

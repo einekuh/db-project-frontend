@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Combobox,
+  createListCollection,
   Field,
   FileUpload,
   Heading,
@@ -14,19 +15,19 @@ import {
   Span,
   Stack,
   Textarea,
-  useFilter,
-  useListCollection,
 } from "@chakra-ui/react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { LuUpload } from "react-icons/lu";
-import conditionObjects from "@/data/Conditions";
-import colorObjects from "@/data/Colors";
-import brandObjects from "@/data/Brands";
-import carTypeObjects from "@/data/CarTypes";
+
+import colors from "@/data/Colors";
+import brands from "@/data/Brands";
+import carTypes from "@/data/CarTypes";
+import conditions from "@/data/Conditions";
+
 const MAX_CHARACTERS = 300;
 const schema = z.object({
   title: z.string().min(1, "Title is required!"),
@@ -36,6 +37,7 @@ const schema = z.object({
   description: z.string().min(1, "Description is required!"),
   price: z.string({ message: "Price is required!" }),
   condition: z.string({ message: "Condition is required" }).array(),
+  location: z.string({ message: "Location is required!" }),
 });
 
 type InsertFormData = z.infer<typeof schema>;
@@ -54,28 +56,50 @@ const InsertForm = () => {
     navigate("/");
   });
   const [value, setValue] = useState("");
-  /////////////////////////////////////////////////////////////
-  const { contains } = useFilter({ sensitivity: "base" });
 
-  const { collection: colorCollection, filter: colorFilter } =
-    useListCollection({
-      initialItems: colorObjects,
-      filter: contains,
-    });
+  //////////////////////////////////////////////////////////////
+  const [searchValueColor, setSearchValueColor] = useState("");
 
-  const { collection: brandCollection, filter: brandFilter } =
-    useListCollection({
-      initialItems: brandObjects,
-      filter: contains,
-    });
+  const filteredColors = useMemo(() => {
+    const q = searchValueColor.trim().toLowerCase();
+    if (!q) return [...colors];
+    return colors.filter((b) => b.toLowerCase().includes(q));
+  }, [searchValueColor]);
 
-  const { collection: carTypeCollection, filter: carTypeFilter } =
-    useListCollection({
-      initialItems: carTypeObjects,
-      filter: contains,
-    });
+  const colorCollection = useMemo(
+    () => createListCollection({ items: filteredColors }),
+    [filteredColors]
+  );
+  //////////////////////////////////////////////////////////////
+  const [searchValueBrand, setSearchValueBrand] = useState("");
 
-  ////////////////////////////////////////////////////////////
+  const filteredBrands = useMemo(() => {
+    const q = searchValueBrand.trim().toLowerCase();
+    if (!q) return [...brands];
+    return brands.filter((b) => b.toLowerCase().includes(q));
+  }, [searchValueBrand]);
+
+  const brandCollection = useMemo(
+    () => createListCollection({ items: filteredBrands }),
+    [filteredBrands]
+  );
+
+  //////////////////////////////////////////////////////////////
+  const [searchValueCarType, setSearchValueCarType] = useState("");
+
+  const filteredCarTypes = useMemo(() => {
+    const q = searchValueCarType.trim().toLowerCase();
+    if (!q) return [...carTypes];
+    return carTypes.filter((b) => b.toLowerCase().includes(q));
+  }, [searchValueCarType]);
+
+  const carTypeCollection = useMemo(
+    () => createListCollection({ items: filteredCarTypes }),
+    [filteredCarTypes]
+  );
+
+  //////////////////////////////////////////////////////////////
+
   return (
     <form onSubmit={onSubmit}>
       <Heading marginY={15}>Insert a car!</Heading>
@@ -88,6 +112,7 @@ const InsertForm = () => {
 
         <Field.Root invalid={!!errors.brand} width={{ base: 300, md: 500 }}>
           <Field.Label>Brand</Field.Label>
+
           <Controller
             control={control}
             name="brand"
@@ -95,12 +120,10 @@ const InsertForm = () => {
               <Combobox.Root
                 collection={brandCollection}
                 value={field.value ? [field.value] : []}
-                onValueChange={({ value }) => field.onChange(value[0] || "")}
-                onInputValueChange={(
-                  details: Combobox.InputValueChangeDetails
-                ) => {
-                  brandFilter(details.inputValue);
-                }}
+                onValueChange={({ value }) => field.onChange(value[0] ?? "")}
+                onInputValueChange={(details) =>
+                  setSearchValueBrand(details.inputValue)
+                }
                 onInteractOutside={() => field.onBlur()}
               >
                 <Combobox.Control>
@@ -115,9 +138,10 @@ const InsertForm = () => {
                   <Combobox.Positioner>
                     <Combobox.Content>
                       <Combobox.Empty>No brands found</Combobox.Empty>
+
                       {brandCollection.items.map((item) => (
-                        <Combobox.Item key={item.value} item={item}>
-                          {item.label}
+                        <Combobox.Item key={item} item={item}>
+                          {item}
                           <Combobox.ItemIndicator />
                         </Combobox.Item>
                       ))}
@@ -127,11 +151,13 @@ const InsertForm = () => {
               </Combobox.Root>
             )}
           />
-          <Field.ErrorText>{errors.brand?.message}</Field.ErrorText>
+
+          <Field.ErrorText>{errors.brand?.message as string}</Field.ErrorText>
         </Field.Root>
 
         <Field.Root invalid={!!errors.color} width={{ base: 300, md: 500 }}>
           <Field.Label>Color</Field.Label>
+
           <Controller
             control={control}
             name="color"
@@ -139,12 +165,10 @@ const InsertForm = () => {
               <Combobox.Root
                 collection={colorCollection}
                 value={field.value ? [field.value] : []}
-                onValueChange={({ value }) => field.onChange(value[0] || "")}
-                onInputValueChange={(
-                  details: Combobox.InputValueChangeDetails
-                ) => {
-                  colorFilter(details.inputValue);
-                }}
+                onValueChange={({ value }) => field.onChange(value[0] ?? "")}
+                onInputValueChange={(details) =>
+                  setSearchValueColor(details.inputValue)
+                }
                 onInteractOutside={() => field.onBlur()}
               >
                 <Combobox.Control>
@@ -159,9 +183,10 @@ const InsertForm = () => {
                   <Combobox.Positioner>
                     <Combobox.Content>
                       <Combobox.Empty>No colors found</Combobox.Empty>
+
                       {colorCollection.items.map((item) => (
-                        <Combobox.Item key={item.value} item={item}>
-                          {item.label}
+                        <Combobox.Item key={item} item={item}>
+                          {item}
                           <Combobox.ItemIndicator />
                         </Combobox.Item>
                       ))}
@@ -171,11 +196,13 @@ const InsertForm = () => {
               </Combobox.Root>
             )}
           />
-          <Field.ErrorText>{errors.color?.message}</Field.ErrorText>
+
+          <Field.ErrorText>{errors.color?.message as string}</Field.ErrorText>
         </Field.Root>
 
         <Field.Root invalid={!!errors.carType} width={{ base: 300, md: 500 }}>
-          <Field.Label>Car Type</Field.Label>
+          <Field.Label>Car type</Field.Label>
+
           <Controller
             control={control}
             name="carType"
@@ -183,12 +210,10 @@ const InsertForm = () => {
               <Combobox.Root
                 collection={carTypeCollection}
                 value={field.value ? [field.value] : []}
-                onValueChange={({ value }) => field.onChange(value[0] || "")}
-                onInputValueChange={(
-                  details: Combobox.InputValueChangeDetails
-                ) => {
-                  carTypeFilter(details.inputValue);
-                }}
+                onValueChange={({ value }) => field.onChange(value[0] ?? "")}
+                onInputValueChange={(details) =>
+                  setSearchValueCarType(details.inputValue)
+                }
                 onInteractOutside={() => field.onBlur()}
               >
                 <Combobox.Control>
@@ -203,9 +228,10 @@ const InsertForm = () => {
                   <Combobox.Positioner>
                     <Combobox.Content>
                       <Combobox.Empty>No car types found</Combobox.Empty>
+
                       {carTypeCollection.items.map((item) => (
-                        <Combobox.Item key={item.value} item={item}>
-                          {item.label}
+                        <Combobox.Item key={item} item={item}>
+                          {item}
                           <Combobox.ItemIndicator />
                         </Combobox.Item>
                       ))}
@@ -215,20 +241,23 @@ const InsertForm = () => {
               </Combobox.Root>
             )}
           />
-          <Field.ErrorText>{errors.carType?.message}</Field.ErrorText>
+
+          <Field.ErrorText>{errors.carType?.message as string}</Field.ErrorText>
         </Field.Root>
+
         <Field.Root invalid={!!errors.condition} width={{ base: 300, md: 500 }}>
           <Field.Label>Condition</Field.Label>
+
           <Controller
             control={control}
             name="condition"
             render={({ field }) => (
               <Select.Root
                 name={field.name}
+                collection={createListCollection({ items: conditions })}
                 value={field.value}
-                onValueChange={({ value }) => field.onChange(value)}
+                onValueChange={({ value }) => field.onChange(value[0] ?? "")}
                 onInteractOutside={() => field.onBlur()}
-                collection={conditionObjects}
               >
                 <Select.HiddenSelect />
                 <Select.Control>
@@ -239,22 +268,32 @@ const InsertForm = () => {
                     <Select.Indicator />
                   </Select.IndicatorGroup>
                 </Select.Control>
+
                 <Portal>
                   <Select.Positioner>
                     <Select.Content>
-                      {conditionObjects.items.map((condition) => (
-                        <Select.Item item={condition} key={condition.value}>
-                          {condition.label}
-                          <Select.ItemIndicator />
-                        </Select.Item>
-                      ))}
+                      <Select.ItemGroup>
+                        {conditions.map((condition) => (
+                          <Select.Item key={condition} item={condition}>
+                            {condition}
+                            <Select.ItemIndicator />
+                          </Select.Item>
+                        ))}
+                      </Select.ItemGroup>
                     </Select.Content>
                   </Select.Positioner>
                 </Portal>
               </Select.Root>
             )}
           />
+
           <Field.ErrorText>{errors.condition?.message}</Field.ErrorText>
+        </Field.Root>
+
+        <Field.Root invalid={!!errors.location} width={{ base: 300, md: 500 }}>
+          <Field.Label>City</Field.Label>
+          <Input {...register("location")} placeholder="Enter a location" />
+          <Field.ErrorText>{errors.location?.message}</Field.ErrorText>
         </Field.Root>
 
         <Field.Root invalid={!!errors.price} width={{ base: 300, md: 500 }}>

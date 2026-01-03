@@ -12,7 +12,7 @@ import { BsChatSquareDots } from "react-icons/bs";
 const NavBar = () => {
   const authStatus = useAuthStore((s) => s.authStatus);
   return (
-    <Box>
+    <Box background={"black"}>
       <HStack justifyContent="space-between">
         <Box marginLeft={6}>
           <Link to="/">

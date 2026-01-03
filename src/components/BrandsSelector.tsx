@@ -27,6 +27,7 @@ const BrandsSelector = () => {
 
   const handleValueChange = (details: Combobox.ValueChangeDetails) => {
     setSelectedBrands(details.value);
+    console.log(selectedBrands);
   };
   return (
     <Combobox.Root

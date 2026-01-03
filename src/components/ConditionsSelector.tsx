@@ -1,7 +1,9 @@
 import conditionObjects from "@/data/Conditions";
 import { Portal, Select } from "@chakra-ui/react";
+import { useState } from "react";
 
 const ConditionsSelector = () => {
+  const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
   return (
     <Select.Root
       collection={conditionObjects}
@@ -11,6 +13,7 @@ const ConditionsSelector = () => {
       marginRight={10}
       width="100%"
       multiple
+      onSelect={(e) => setSelectedConditions([...selectedConditions, e.value])}
     >
       <Select.HiddenSelect />
 

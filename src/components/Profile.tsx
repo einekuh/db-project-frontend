@@ -46,25 +46,41 @@ const Profile = () => {
       <Stack gap="4" align="flex-start" maxW="sm">
         <Field.Root invalid={!!errors.firstName} width={{ base: 300, md: 500 }}>
           <Field.Label>First Name</Field.Label>
-          <Input {...register("firstName")} disabled={!edit} />
+          <Input
+            {...register("firstName")}
+            disabled={!edit}
+            value={"hier wird der name dynamisch geladen"}
+          />
           <Field.ErrorText>{errors.firstName?.message}</Field.ErrorText>
         </Field.Root>
 
         <Field.Root invalid={!!errors.lastName} width={{ base: 300, md: 500 }}>
           <Field.Label>Last Name</Field.Label>
-          <Input {...register("lastName")} disabled={!edit} />
+          <Input
+            {...register("lastName")}
+            disabled={!edit}
+            value={"hier wird der name dynamisch geladen"}
+          />
           <Field.ErrorText>{errors.lastName?.message}</Field.ErrorText>
         </Field.Root>
 
         <Field.Root invalid={!!errors.username} width={{ base: 300, md: 500 }}>
           <Field.Label>Username</Field.Label>
-          <Input {...register("username")} disabled={!edit} />
+          <Input
+            {...register("username")}
+            disabled={!edit}
+            value={"hier wird der username dynamisch geladen"}
+          />
           <Field.ErrorText>{errors.username?.message}</Field.ErrorText>
         </Field.Root>
 
         <Field.Root invalid={!!errors.email} width={{ base: 300, md: 500 }}>
           <Field.Label>E-Mail</Field.Label>
-          <Input {...register("email")} disabled={!edit} />
+          <Input
+            {...register("email")}
+            disabled={!edit}
+            value={"hier wird die email dynamisch geladen"}
+          />
           <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
         </Field.Root>
         <Field.Root invalid={!!errors.about} width={{ base: 300, md: 500 }}>
@@ -85,6 +101,8 @@ const Profile = () => {
               onChange={(e) => {
                 setValue(e.currentTarget.value.slice(0, MAX_CHARACTERS));
               }}
+              disabled={!edit}
+              value={""}
             />
           </InputGroup>
           <Field.ErrorText>{errors.about?.message}</Field.ErrorText>

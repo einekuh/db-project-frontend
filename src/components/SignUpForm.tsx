@@ -6,12 +6,43 @@ import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+async function isEmailAvailable(email: string): Promise<boolean> {
+  /* const res = await fetch(
+    `/api/auth/email-available?email=${encodeURIComponent(email)}`
+  );
+  if (!res.ok) return false;
+  const data = await res.json(); // { available: boolean }
+  return Boolean(data.available);*/
+  return true;
+}
+
 const schema = z.object({
-  email: z.string(),
-  password: z.string(),
-  firstName: z.string(),
-  lastName: z.string(),
-  username: z.string(),
+  email: z
+    .string()
+    .trim()
+    .min(1, "Email is required")
+    .email("Invalid email")
+    .refine(async (email) => await isEmailAvailable(email), {
+      message: "Email already exists",
+    }),
+  username: z
+    .string()
+    .trim()
+    .min(3, "Username must be at least 3 characters")
+    .max(20, "Username must be at most 20 characters")
+    .regex(
+      /^[a-zA-Z0-9_]+$/,
+      "Username may contain only letters, numbers, and _"
+    ),
+  firstName: z.string().trim().min(1, "First name is required").max(50),
+  lastName: z.string().trim().min(1, "Last name is required").max(50),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .max(72, "Password must be at most 72 characters")
+    .regex(/[a-z]/, "Password must contain a lowercase letter")
+    .regex(/[A-Z]/, "Password must contain an uppercase letter")
+    .regex(/[0-9]/, "Password must contain a number"),
 });
 
 type SignUpFormData = z.infer<typeof schema>;

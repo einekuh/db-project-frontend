@@ -6,8 +6,8 @@ const FavoritesPage = () => {
   const authStatus = useAuthStore((s) => s.authStatus);
   if (authStatus !== "authenticated")
     return (
-      <Box marginX="40%" marginY="5%">
-        <Heading>Log in to see your favorites!</Heading>
+      <Box marginX="34%" marginY="5%">
+        <Heading fontSize="300%">Log in to see your favorites!</Heading>
       </Box>
     );
   return (

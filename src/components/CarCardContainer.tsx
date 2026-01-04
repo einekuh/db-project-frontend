@@ -9,7 +9,7 @@ const CarCardContainer = ({ children }: Props) => {
     <Box
       margin={2}
       _hover={{
-        transform: "scale(1.03)",
+        transform: "scale(1.015)",
         transition: "transform .15s ease-in",
         cursor: "pointer",
       }}

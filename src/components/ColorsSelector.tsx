@@ -41,6 +41,7 @@ const ColorsSelector = () => {
       variant="subtle"
       marginTop={7}
       marginRight={10}
+      size="lg"
     >
       <Wrap gap="2">
         {selectedColors.map((color) => (

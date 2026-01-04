@@ -5,14 +5,14 @@ import { Switch } from "./ui/switch";
 const ColorModeSwitch = () => {
   const { toggleColorMode, colorMode } = useColorMode();
   return (
-    <HStack padding={2}>
+    <HStack marginX={5} marginLeft={12}>
       <Switch
         checked={colorMode === "dark"}
         onCheckedChange={toggleColorMode}
         colorPalette={"cyan"}
-        size="xs"
+        size="md"
       ></Switch>
-      <Text fontSize={11}>{colorMode}</Text>
+      <Text>{colorMode}</Text>
     </HStack>
   );
 };

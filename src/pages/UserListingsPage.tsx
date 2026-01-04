@@ -1,8 +1,8 @@
 import useAuthStore from "@/authStore";
-import InsertForm from "@/components/InsertForm";
+import UserListingsGrid from "@/components/UserListingsGrid";
 import { Box, Heading } from "@chakra-ui/react";
 
-const InsertPage = () => {
+const UserListingsPage = () => {
   const authStatus = useAuthStore((s) => s.authStatus);
   if (authStatus !== "authenticated")
     return (
@@ -11,14 +11,13 @@ const InsertPage = () => {
       </Box>
     );
   return (
-    <>
-      <Box justifyItems="center">
-        <Box marginTop="5%" marginBottom="5%">
-          <InsertForm />
-        </Box>
+    <Box marginX="15%">
+      <Box marginX="2%">
+        <Heading>Here are your Listings!</Heading>
+        <UserListingsGrid />
       </Box>
-    </>
+    </Box>
   );
 };
 
-export default InsertPage;
+export default UserListingsPage;

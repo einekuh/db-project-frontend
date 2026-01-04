@@ -1,16 +1,15 @@
 import { SimpleGrid } from "@chakra-ui/react";
-
 import CarCardContainer from "./CarCardContainer";
-import ListingCard from "./ListingCard";
-import { listingsFavorites } from "@/entities/Listing";
+import UserListingCard from "./UserListingCard";
+import { listings } from "@/entities/Listing";
 
-const FavoriteGrid = () => {
+const UserListingsGrid = () => {
   return (
     <>
       <SimpleGrid padding="10px" columns={{ sm: 1, md: 2 }}>
-        {listingsFavorites.map((listing) => (
+        {listings.map((listing) => (
           <CarCardContainer key={listing.listing_id}>
-            <ListingCard listing={listing} />
+            <UserListingCard listing={listing} />
           </CarCardContainer>
         ))}
       </SimpleGrid>
@@ -18,4 +17,4 @@ const FavoriteGrid = () => {
   );
 };
 
-export default FavoriteGrid;
+export default UserListingsGrid;

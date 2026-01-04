@@ -6,6 +6,7 @@ import {
   Field,
   FileUpload,
   Heading,
+  HStack,
   Icon,
   Input,
   InputGroup,
@@ -17,7 +18,6 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { Controller, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo, useState } from "react";
@@ -27,57 +27,80 @@ import colors from "@/data/Colors";
 import brands from "@/data/Brands";
 import carTypes from "@/data/CarTypes";
 import conditions from "@/data/Conditions";
+import type { ListingDetails } from "@/entities/Listing";
+
+import CarThumbnails from "./CarThumbnails";
 
 const MAX_CHARACTERS = 300;
 const schema = z.object({
   title: z.string().min(1, "Title is required!"),
   brand: z.string({ message: "Brand is required!" }),
   color: z.string({ message: "Color is required!" }),
-  carType: z.string({ message: "Car type is required!" }),
+  car_type: z.string({ message: "Car type is required!" }),
   description: z.string().min(1, "Description is required!"),
   price: z.string({ message: "Price is required!" }),
   condition: z.string({ message: "Condition is required" }),
   location: z.string({ message: "Location is required!" }),
 });
 
-type InsertFormData = z.infer<typeof schema>;
+type EditFormData = z.infer<typeof schema>;
 
-const InsertForm = () => {
+interface Props {
+  listing: ListingDetails | null;
+}
+
+const EditForm = ({ listing }: Props) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
     control,
-  } = useForm<InsertFormData>({ resolver: zodResolver(schema) });
+    reset,
+  } = useForm<EditFormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      title: listing?.title,
+      brand: listing?.car.brand,
+      color: listing?.car.color,
+      car_type: listing?.car.car_type,
+      description: listing?.description,
+      price: listing?.price.toString(),
+      condition: listing?.car.condition,
+      location: listing?.location,
+    },
+  });
 
-  const navigate = useNavigate();
   const onSubmit = handleSubmit((data) => {
     console.log(data);
-    navigate("/");
   });
-  const [value, setValue] = useState("");
 
   //////////////////////////////////////////////////////////////
-  const [searchValueColor, setSearchValueColor] = useState("");
+  const [edit, setEdit] = useState(false);
+
+  //////////////////////////////////////////////////////////////
+  const [descriptionValue, setDescriptionValue] = useState("");
+
+  //////////////////////////////////////////////////////////////
+  const [colorSearchValue, setColorSearchValue] = useState("");
 
   const filteredColors = useMemo(() => {
-    const q = searchValueColor.trim().toLowerCase();
+    const q = colorSearchValue.trim().toLowerCase();
     if (!q) return [...colors];
     return colors.filter((b) => b.toLowerCase().includes(q));
-  }, [searchValueColor]);
+  }, [colorSearchValue]);
 
   const colorCollection = useMemo(
     () => createListCollection({ items: filteredColors }),
     [filteredColors]
   );
   //////////////////////////////////////////////////////////////
-  const [searchValueBrand, setSearchValueBrand] = useState("");
+  const [brandSearchValue, setBrandSearchValue] = useState("");
 
   const filteredBrands = useMemo(() => {
-    const q = searchValueBrand.trim().toLowerCase();
+    const q = brandSearchValue.trim().toLowerCase();
     if (!q) return [...brands];
     return brands.filter((b) => b.toLowerCase().includes(q));
-  }, [searchValueBrand]);
+  }, [brandSearchValue]);
 
   const brandCollection = useMemo(
     () => createListCollection({ items: filteredBrands }),
@@ -85,13 +108,13 @@ const InsertForm = () => {
   );
 
   //////////////////////////////////////////////////////////////
-  const [searchValueCarType, setSearchValueCarType] = useState("");
+  const [carTypeSearchValue, setCarTypeSearchValue] = useState("");
 
   const filteredCarTypes = useMemo(() => {
-    const q = searchValueCarType.trim().toLowerCase();
+    const q = carTypeSearchValue.trim().toLowerCase();
     if (!q) return [...carTypes];
     return carTypes.filter((b) => b.toLowerCase().includes(q));
-  }, [searchValueCarType]);
+  }, [carTypeSearchValue]);
 
   const carTypeCollection = useMemo(
     () => createListCollection({ items: filteredCarTypes }),
@@ -100,17 +123,20 @@ const InsertForm = () => {
 
   //////////////////////////////////////////////////////////////
 
+  if (listing === null) return null;
+
   return (
     <form onSubmit={onSubmit}>
       <Heading marginY={16} fontSize="250%">
-        Insert a car!
+        Edit your car!
       </Heading>
       <Stack gap="4" align="flex-start">
         <Field.Root invalid={!!errors.title} width={{ base: 300, md: 750 }}>
           <Field.Label>
             <Heading>Title</Heading>
           </Field.Label>
-          <Input {...register("title")} placeholder="Enter a title" size="xl" />
+          <Input {...register("title")} size="xl" disabled={!edit} />
+
           <Field.ErrorText>{errors.title?.message}</Field.ErrorText>
         </Field.Root>
 
@@ -124,11 +150,12 @@ const InsertForm = () => {
             name="brand"
             render={({ field }) => (
               <Combobox.Root
+                disabled={!edit}
                 collection={brandCollection}
                 value={field.value ? [field.value] : []}
                 onValueChange={({ value }) => field.onChange(value[0] ?? "")}
                 onInputValueChange={(details) =>
-                  setSearchValueBrand(details.inputValue)
+                  setBrandSearchValue(details.inputValue)
                 }
                 onInteractOutside={() => field.onBlur()}
                 size="lg"
@@ -158,7 +185,6 @@ const InsertForm = () => {
               </Combobox.Root>
             )}
           />
-
           <Field.ErrorText>{errors.brand?.message as string}</Field.ErrorText>
         </Field.Root>
 
@@ -172,11 +198,12 @@ const InsertForm = () => {
             name="color"
             render={({ field }) => (
               <Combobox.Root
+                disabled={!edit}
                 collection={colorCollection}
                 value={field.value ? [field.value] : []}
                 onValueChange={({ value }) => field.onChange(value[0] ?? "")}
                 onInputValueChange={(details) =>
-                  setSearchValueColor(details.inputValue)
+                  setColorSearchValue(details.inputValue)
                 }
                 onInteractOutside={() => field.onBlur()}
                 size="lg"
@@ -210,21 +237,22 @@ const InsertForm = () => {
           <Field.ErrorText>{errors.color?.message as string}</Field.ErrorText>
         </Field.Root>
 
-        <Field.Root invalid={!!errors.carType} width={{ base: 300, md: 750 }}>
+        <Field.Root invalid={!!errors.car_type} width={{ base: 300, md: 750 }}>
           <Field.Label>
             <Heading>Car type</Heading>
           </Field.Label>
 
           <Controller
             control={control}
-            name="carType"
+            name="car_type"
             render={({ field }) => (
               <Combobox.Root
+                disabled={!edit}
                 collection={carTypeCollection}
                 value={field.value ? [field.value] : []}
                 onValueChange={({ value }) => field.onChange(value[0] ?? "")}
                 onInputValueChange={(details) =>
-                  setSearchValueCarType(details.inputValue)
+                  setCarTypeSearchValue(details.inputValue)
                 }
                 onInteractOutside={() => field.onBlur()}
                 size="lg"
@@ -255,7 +283,9 @@ const InsertForm = () => {
             )}
           />
 
-          <Field.ErrorText>{errors.carType?.message as string}</Field.ErrorText>
+          <Field.ErrorText>
+            {errors.car_type?.message as string}
+          </Field.ErrorText>
         </Field.Root>
 
         <Field.Root invalid={!!errors.condition} width={{ base: 300, md: 750 }}>
@@ -268,6 +298,7 @@ const InsertForm = () => {
             name="condition"
             render={({ field }) => (
               <Select.Root
+                disabled={!edit}
                 name={field.name}
                 collection={createListCollection({ items: conditions })}
                 value={field.value ? [field.value] : []}
@@ -314,6 +345,7 @@ const InsertForm = () => {
             {...register("location")}
             placeholder="Enter a location"
             size="xl"
+            disabled={!edit}
           />
           <Field.ErrorText>{errors.location?.message}</Field.ErrorText>
         </Field.Root>
@@ -327,7 +359,7 @@ const InsertForm = () => {
             control={control}
             render={({ field }) => (
               <NumberInput.Root
-                disabled={field.disabled}
+                disabled={!edit}
                 name={field.name}
                 value={field.value}
                 onValueChange={({ value }) => {
@@ -361,7 +393,7 @@ const InsertForm = () => {
           <InputGroup
             endElement={
               <Span color="fg.muted" textStyle="xs">
-                {value.length} / {MAX_CHARACTERS}
+                {descriptionValue.length} / {MAX_CHARACTERS}
               </Span>
             }
           >
@@ -372,44 +404,82 @@ const InsertForm = () => {
               placeholder="Write a short description"
               maxLength={MAX_CHARACTERS}
               onChange={(e) => {
-                setValue(e.currentTarget.value.slice(0, MAX_CHARACTERS));
+                setDescriptionValue(
+                  e.currentTarget.value.slice(0, MAX_CHARACTERS)
+                );
               }}
               size="xl"
+              disabled={!edit}
+              defaultValue={listing.description}
             />
           </InputGroup>
           <Field.ErrorText>{errors.description?.message}</Field.ErrorText>
         </Field.Root>
+        <CarThumbnails images={listing.images} edit={edit} />
+        {edit ? (
+          <Field.Root width={{ base: 300, md: 750 }}>
+            <Field.Label>
+              <Heading>Upload Images</Heading>
+            </Field.Label>
+            <FileUpload.Root
+              alignItems="stretch"
+              maxFiles={10}
+              accept="image/*"
+              width="100%"
+            >
+              <FileUpload.HiddenInput />
+              <FileUpload.Dropzone>
+                <Icon size="md" color="fg.muted">
+                  <LuUpload />
+                </Icon>
+                <FileUpload.DropzoneContent>
+                  <Box>Drag and drop images here</Box>
+                  <Box color="fg.muted">.png, .jpg up to 5MB</Box>
+                </FileUpload.DropzoneContent>
+              </FileUpload.Dropzone>
+              <FileUpload.List />
+            </FileUpload.Root>
+          </Field.Root>
+        ) : null}
 
-        <Field.Root width={{ base: 300, md: 750 }}>
-          <Field.Label>
-            <Heading>Upload Images</Heading>
-          </Field.Label>
-          <FileUpload.Root
-            alignItems="stretch"
-            maxFiles={10}
-            accept="image/*"
-            width="100%"
+        <HStack>
+          <Button
+            type="button"
+            hidden={edit}
+            onClick={() => setEdit(true)}
+            size="xl"
           >
-            <FileUpload.HiddenInput />
-            <FileUpload.Dropzone>
-              <Icon size="md" color="fg.muted">
-                <LuUpload />
-              </Icon>
-              <FileUpload.DropzoneContent>
-                <Box>Drag and drop images here</Box>
-                <Box color="fg.muted">.png, .jpg up to 5MB</Box>
-              </FileUpload.DropzoneContent>
-            </FileUpload.Dropzone>
-            <FileUpload.List />
-          </FileUpload.Root>
-        </Field.Root>
+            Edit
+          </Button>
 
-        <Button type="submit" size="xl">
-          Submit
-        </Button>
+          <Button type="submit" hidden={!edit} size="xl">
+            Submit
+          </Button>
+
+          <Button
+            type="button"
+            hidden={!edit}
+            onClick={() => {
+              setEdit(false);
+              reset({
+                title: listing.title,
+                brand: listing.car.brand,
+                color: listing.car.color,
+                car_type: listing.car.car_type,
+                description: listing.description,
+                price: listing.price.toString(),
+                condition: listing.car.condition,
+                location: listing.location,
+              });
+            }}
+            size="xl"
+          >
+            Cancel
+          </Button>
+        </HStack>
       </Stack>
     </form>
   );
 };
 
-export default InsertForm;
+export default EditForm;

@@ -34,8 +34,8 @@ const schema = z.object({
       /^[a-zA-Z0-9_]+$/,
       "Username may contain only letters, numbers, and _"
     ),
-  firstName: z.string().trim().min(1, "First name is required").max(50),
-  lastName: z.string().trim().min(1, "Last name is required").max(50),
+  forename: z.string().trim().min(1, "First name is required").max(50),
+  surname: z.string().trim().min(1, "Last name is required").max(50),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
@@ -64,38 +64,52 @@ const SignUpForm = () => {
 
   return (
     <form onSubmit={onSubmit}>
-      <Heading marginY={15}>Sign Up!</Heading>
-      <Stack gap="4" align="flex-start" maxW="sm">
-        <Field.Root invalid={!!errors.firstName} width={{ base: 300, md: 500 }}>
-          <Field.Label>First Name</Field.Label>
-          <Input {...register("firstName")} />
-          <Field.ErrorText>{errors.firstName?.message}</Field.ErrorText>
+      <Heading marginY={16} fontSize="250%">
+        Sign up!
+      </Heading>
+      <Stack gap="4" align="flex-start">
+        <Field.Root invalid={!!errors.forename} width={{ base: 300, md: 750 }}>
+          <Field.Label>
+            <Heading>Forename</Heading>
+          </Field.Label>
+          <Input {...register("forename")} size="xl" />
+          <Field.ErrorText>{errors.forename?.message}</Field.ErrorText>
         </Field.Root>
 
-        <Field.Root invalid={!!errors.lastName} width={{ base: 300, md: 500 }}>
-          <Field.Label>Last Name</Field.Label>
-          <Input {...register("lastName")} />
-          <Field.ErrorText>{errors.lastName?.message}</Field.ErrorText>
+        <Field.Root invalid={!!errors.surname} width={{ base: 300, md: 750 }}>
+          <Field.Label>
+            <Heading>Surname</Heading>
+          </Field.Label>
+          <Input {...register("surname")} size="xl" />
+          <Field.ErrorText>{errors.surname?.message}</Field.ErrorText>
         </Field.Root>
 
-        <Field.Root invalid={!!errors.email} width={{ base: 300, md: 500 }}>
-          <Field.Label>E-Mail</Field.Label>
-          <Input {...register("email")} />
+        <Field.Root invalid={!!errors.email} width={{ base: 300, md: 750 }}>
+          <Field.Label>
+            <Heading>E-mail</Heading>
+          </Field.Label>
+          <Input {...register("email")} size="xl" />
           <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
         </Field.Root>
 
-        <Field.Root invalid={!!errors.password} width={{ base: 300, md: 500 }}>
-          <Field.Label>Password</Field.Label>
-          <PasswordInput {...register("password")} />
+        <Field.Root invalid={!!errors.password} width={{ base: 300, md: 750 }}>
+          <Field.Label>
+            <Heading>Password</Heading>
+          </Field.Label>
+          <PasswordInput {...register("password")} size="xl" />
           <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
         </Field.Root>
 
-        <Field.Root invalid={!!errors.username} width={{ base: 300, md: 500 }}>
-          <Field.Label>Username</Field.Label>
-          <Input {...register("username")} />
+        <Field.Root invalid={!!errors.username} width={{ base: 300, md: 750 }}>
+          <Field.Label>
+            <Heading>Username</Heading>
+          </Field.Label>
+          <Input {...register("username")} size="xl" />
           <Field.ErrorText>{errors.username?.message}</Field.ErrorText>
         </Field.Root>
-        <Button type="submit">Submit</Button>
+        <Button size="xl" type="submit">
+          Submit
+        </Button>
       </Stack>
     </form>
   );

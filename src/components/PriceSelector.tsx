@@ -1,4 +1,12 @@
-import { Code, HStack, Slider, Stack, useSlider } from "@chakra-ui/react";
+import {
+  Code,
+  Heading,
+  HStack,
+  Slider,
+  Stack,
+  useSlider,
+  Text,
+} from "@chakra-ui/react";
 
 const PriceSelector = () => {
   const slider = useSlider({
@@ -11,10 +19,13 @@ const PriceSelector = () => {
   return (
     <Stack align="flex-start" marginTop={5}>
       <Slider.RootProvider value={slider} width="100%" size="sm">
-        <Slider.Label>Select price range</Slider.Label>
+        <Slider.Label>
+          <Heading>Select price range</Heading>
+        </Slider.Label>
         <HStack>
-          <Code>{slider.value[0].toLocaleString("de-DE")}</Code>{" "}
-          <Code>{slider.value[1].toLocaleString("de-DE")}</Code>€
+          <Code size="lg">{slider.value[0].toLocaleString("de-DE")}</Code>{" "}
+          <Code size="lg">{slider.value[1].toLocaleString("de-DE")}</Code>
+          <Text fontSize="140%">€</Text>
         </HStack>
         <Slider.Control>
           <Slider.Track>

@@ -13,7 +13,7 @@ const Auth = () => {
         <Button
           variant="outline"
           marginRight={1}
-          size="xs"
+          size="xl"
           onClick={() => {
             setStatus("anonymous");
             navigate("/");
@@ -29,7 +29,7 @@ const Auth = () => {
           }}
         >
           <Link to="/profile">
-            <CgProfile size={25} />
+            <CgProfile size={30} />
           </Link>
         </Box>
       </HStack>
@@ -38,7 +38,7 @@ const Auth = () => {
     <HStack margin={2} width={100}>
       <Button
         variant="outline"
-        size="xs"
+        size="xl"
         onClick={() => {
           navigate("/signup");
         }}
@@ -47,7 +47,7 @@ const Auth = () => {
       </Button>
       <Button
         variant="outline"
-        size="xs"
+        size="xl"
         onClick={() => {
           navigate("/login");
         }}

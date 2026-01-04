@@ -1,9 +1,7 @@
-import type { ZodUUID } from "zod";
-
 export default interface User {
-  userId: ZodUUID;
-  firstName: string;
-  lastName: string;
+  user_id: string;
+  forename: string;
+  surname: string;
   username: string;
   email: string;
   passwordHash: string;

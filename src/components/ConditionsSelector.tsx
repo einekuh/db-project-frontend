@@ -24,6 +24,7 @@ const ConditionsSelector = () => {
       width="100%"
       multiple
       closeOnSelect
+      size="lg"
     >
       <Select.HiddenSelect />
 

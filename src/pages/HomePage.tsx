@@ -15,14 +15,14 @@ const HomePage = () => {
       }}
       templateColumns={{
         base: "1fr",
-        lg: "300px 1fr",
+        lg: "400px 1fr",
       }}
     >
       <GridItem
         area="aside"
         paddingX={5}
         display={{ base: "block", lg: "block" }}
-        width={300}
+        width={400}
         marginLeft={4}
         position={{ lg: "fixed" }}
       >

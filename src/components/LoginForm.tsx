@@ -32,19 +32,27 @@ const LoginForm = () => {
 
   return (
     <form onSubmit={onSubmit}>
-      <Heading marginY={15}>Log In!</Heading>
-      <Stack gap="4" align="flex-start" maxW="sm">
-        <Field.Root invalid={!!errors.email} width={{ base: 300, md: 500 }}>
-          <Field.Label>E-mail</Field.Label>
-          <Input {...register("email")} />
+      <Heading marginY={16} fontSize="250%">
+        Log in!
+      </Heading>
+      <Stack gap="4" align="flex-start">
+        <Field.Root invalid={!!errors.email} width={{ base: 300, md: 750 }}>
+          <Field.Label>
+            <Heading>E-mail</Heading>
+          </Field.Label>
+          <Input {...register("email")} size="xl" />
           <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
         </Field.Root>
-        <Field.Root invalid={!!errors.password} width={{ base: 300, md: 500 }}>
-          <Field.Label>Password</Field.Label>
-          <PasswordInput {...register("password")} />
+        <Field.Root invalid={!!errors.password} width={{ base: 300, md: 750 }}>
+          <Field.Label>
+            <Heading>Password</Heading>
+          </Field.Label>
+          <PasswordInput {...register("password")} size="xl" />
           <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
         </Field.Root>
-        <Button type="submit">Submit</Button>
+        <Button size="xl" type="submit">
+          Submit
+        </Button>
       </Stack>
     </form>
   );

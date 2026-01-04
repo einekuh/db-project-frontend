@@ -1,6 +1,7 @@
 import CarDetailsPage from "@/pages/CarDetailsPage";
 import ChatPage from "@/pages/ChatPage";
 import ChatsPage from "@/pages/ChatsPage";
+import EditListingPage from "@/pages/EditListingPage";
 import ErrorPage from "@/pages/ErrorPage";
 import FavoritesPage from "@/pages/FavoritesPage";
 import HomePage from "@/pages/HomePage";
@@ -9,6 +10,7 @@ import Layout from "@/pages/Layout";
 import LoginPage from "@/pages/LoginPage";
 import ProfilePage from "@/pages/ProfilePage";
 import SignUpPage from "@/pages/SignUpPage";
+import UserListingsPage from "@/pages/UserListingsPage";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -42,8 +44,16 @@ const router = createBrowserRouter([
         element: <InsertPage />,
       },
       {
-        path: "cars",
+        path: "listings",
+        element: <UserListingsPage />,
+      },
+      {
+        path: "listings/details/:listing_id",
         element: <CarDetailsPage />,
+      },
+      {
+        path: "listings/edit/:listing_id",
+        element: <EditListingPage />,
       },
       {
         path: "chats/",

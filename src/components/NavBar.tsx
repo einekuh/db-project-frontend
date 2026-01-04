@@ -8,15 +8,16 @@ import SearchInput from "./SearchInput";
 import { IoMdHeartEmpty } from "react-icons/io";
 import useAuthStore from "@/authStore";
 import { BsChatSquareDots } from "react-icons/bs";
+import { LuTvMinimal } from "react-icons/lu";
 
 const NavBar = () => {
   const authStatus = useAuthStore((s) => s.authStatus);
   return (
-    <Box background={"black"}>
+    <Box background={{ _dark: "black", _light: "white" }}>
       <HStack justifyContent="space-between">
-        <Box marginLeft={6}>
+        <Box marginLeft={8}>
           <Link to="/">
-            <IoCarSportOutline size={30} />
+            <IoCarSportOutline size={60} />
           </Link>
         </Box>
         <SearchInput />
@@ -30,7 +31,7 @@ const NavBar = () => {
             }}
           >
             <Link to="/chats">
-              <BsChatSquareDots size={25} />
+              <BsChatSquareDots size={30} />
             </Link>
           </Box>
         )}
@@ -43,7 +44,7 @@ const NavBar = () => {
           }}
         >
           <Link to="/favorites">
-            <IoMdHeartEmpty size={25} />
+            <IoMdHeartEmpty size={30} />
           </Link>
         </Box>
         <Box
@@ -55,7 +56,19 @@ const NavBar = () => {
           }}
         >
           <Link to="/insert">
-            <CiSquarePlus size={25} />
+            <CiSquarePlus size={30} />
+          </Link>
+        </Box>
+        <Box
+          marginX={1}
+          _hover={{
+            transform: "scale(1.1)",
+            transition: "transform .15s ease-in",
+            cursor: "pointer",
+          }}
+        >
+          <Link to="/listings">
+            <LuTvMinimal size={30} />
           </Link>
         </Box>
 

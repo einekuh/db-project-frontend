@@ -23,7 +23,7 @@ const SearchInput = () => {
       endElement={endElement}
       startElement={
         <Box margin={1}>
-          <BsSearch />
+          <BsSearch size={20} />
         </Box>
       }
       width="60%"
@@ -31,7 +31,7 @@ const SearchInput = () => {
       <Input
         marginY={3}
         marginLeft={2}
-        size="2xs"
+        size="lg"
         ref={inputRef}
         placeholder="Search"
         value={value}

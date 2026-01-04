@@ -17,8 +17,8 @@ import { useState } from "react";
 
 const schema = z.object({
   email: z.string(),
-  firstName: z.string(),
-  lastName: z.string(),
+  forename: z.string(),
+  surname: z.string(),
   username: z.string(),
   about: z.string(),
 });
@@ -42,49 +42,65 @@ const Profile = () => {
 
   return (
     <form onSubmit={onSubmit}>
-      <Heading marginY={15}>Your Profile!</Heading>
-      <Stack gap="4" align="flex-start" maxW="sm">
-        <Field.Root invalid={!!errors.firstName} width={{ base: 300, md: 500 }}>
-          <Field.Label>First Name</Field.Label>
+      <Heading marginY={16} fontSize="250%">
+        Your Profile!
+      </Heading>
+      <Stack gap="4" align="flex-start">
+        <Field.Root invalid={!!errors.forename} width={{ base: 300, md: 750 }}>
+          <Field.Label>
+            <Heading>Forename</Heading>
+          </Field.Label>
           <Input
-            {...register("firstName")}
+            {...register("forename")}
             disabled={!edit}
             value={"hier wird der name dynamisch geladen"}
+            size="xl"
           />
-          <Field.ErrorText>{errors.firstName?.message}</Field.ErrorText>
+          <Field.ErrorText>{errors.forename?.message}</Field.ErrorText>
         </Field.Root>
 
-        <Field.Root invalid={!!errors.lastName} width={{ base: 300, md: 500 }}>
-          <Field.Label>Last Name</Field.Label>
+        <Field.Root invalid={!!errors.surname} width={{ base: 300, md: 750 }}>
+          <Field.Label>
+            <Heading>Surname</Heading>
+          </Field.Label>
           <Input
-            {...register("lastName")}
+            {...register("surname")}
             disabled={!edit}
             value={"hier wird der name dynamisch geladen"}
+            size="xl"
           />
-          <Field.ErrorText>{errors.lastName?.message}</Field.ErrorText>
+          <Field.ErrorText>{errors.surname?.message}</Field.ErrorText>
         </Field.Root>
 
-        <Field.Root invalid={!!errors.username} width={{ base: 300, md: 500 }}>
-          <Field.Label>Username</Field.Label>
+        <Field.Root invalid={!!errors.username} width={{ base: 300, md: 750 }}>
+          <Field.Label>
+            <Heading>Username</Heading>
+          </Field.Label>
           <Input
             {...register("username")}
             disabled={!edit}
             value={"hier wird der username dynamisch geladen"}
+            size="xl"
           />
           <Field.ErrorText>{errors.username?.message}</Field.ErrorText>
         </Field.Root>
 
-        <Field.Root invalid={!!errors.email} width={{ base: 300, md: 500 }}>
-          <Field.Label>E-Mail</Field.Label>
+        <Field.Root invalid={!!errors.email} width={{ base: 300, md: 750 }}>
+          <Field.Label>
+            <Heading>E-Mail</Heading>
+          </Field.Label>
           <Input
             {...register("email")}
             disabled={!edit}
             value={"hier wird die email dynamisch geladen"}
+            size="xl"
           />
           <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
         </Field.Root>
-        <Field.Root invalid={!!errors.about} width={{ base: 300, md: 500 }}>
-          <Field.Label>About</Field.Label>
+        <Field.Root invalid={!!errors.about} width={{ base: 300, md: 750 }}>
+          <Field.Label>
+            <Heading>About</Heading>
+          </Field.Label>
           <InputGroup
             endElement={
               <Span color="fg.muted" textStyle="xs">
@@ -103,6 +119,7 @@ const Profile = () => {
               }}
               disabled={!edit}
               value={""}
+              size="xl"
             />
           </InputGroup>
           <Field.ErrorText>{errors.about?.message}</Field.ErrorText>
@@ -111,10 +128,16 @@ const Profile = () => {
           <Button
             type={edit ? "submit" : "button"}
             onClick={() => setEdit(!edit)}
+            size="xl"
           >
             {edit ? "Submit" : "Edit"}
           </Button>
-          <Button type={"button"} hidden={!edit} onClick={() => setEdit(!edit)}>
+          <Button
+            size="xl"
+            type={"button"}
+            hidden={!edit}
+            onClick={() => setEdit(!edit)}
+          >
             Cancel
           </Button>
         </HStack>

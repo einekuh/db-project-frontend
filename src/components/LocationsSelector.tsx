@@ -1,4 +1,4 @@
-import brands from "@/data/Brands";
+import { locations } from "@/data/Locations";
 import useListingQueryStore from "@/listingQueryStore";
 import {
   Badge,
@@ -9,14 +9,14 @@ import {
 } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
 
-const BrandsSelector = () => {
+const LocationsSelector = () => {
   const [searchValue, setSearchValue] = useState("");
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  const setBrands = useListingQueryStore((s) => s.setBrands);
+  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
+  const setLocations = useListingQueryStore((s) => s.setLocations);
 
   const filteredItems = useMemo(
     () =>
-      brands.filter((item) =>
+      locations.filter((item) =>
         item.toLowerCase().includes(searchValue.toLowerCase())
       ),
     [searchValue]
@@ -28,16 +28,16 @@ const BrandsSelector = () => {
   );
 
   const handleValueChange = (details: Combobox.ValueChangeDetails) => {
-    setSelectedBrands(details.value);
-    setBrands(details.value);
-    console.log(selectedBrands);
+    setSelectedLocations(details.value);
+    setLocations(details.value);
+    console.log(selectedLocations);
   };
   return (
     <Combobox.Root
       multiple
       closeOnSelect
       width="100%"
-      value={selectedBrands}
+      value={selectedLocations}
       collection={collection}
       onValueChange={handleValueChange}
       onInputValueChange={(details) => setSearchValue(details.inputValue)}
@@ -47,13 +47,13 @@ const BrandsSelector = () => {
       size="lg"
     >
       <Wrap gap="2">
-        {selectedBrands.map((brand) => (
-          <Badge key={brand}>{brand}</Badge>
+        {selectedLocations.map((location) => (
+          <Badge key={location}>{location}</Badge>
         ))}
       </Wrap>
 
       <Combobox.Control>
-        <Combobox.Input placeholder="Search brand" />
+        <Combobox.Input placeholder="Search location" />
         <Combobox.IndicatorGroup>
           <Combobox.Trigger />
           <Combobox.ClearTrigger />
@@ -70,7 +70,7 @@ const BrandsSelector = () => {
                   <Combobox.ItemIndicator />
                 </Combobox.Item>
               ))}
-              <Combobox.Empty>No brands found</Combobox.Empty>
+              <Combobox.Empty>No Locations found</Combobox.Empty>
             </Combobox.ItemGroup>
           </Combobox.Content>
         </Combobox.Positioner>
@@ -79,4 +79,4 @@ const BrandsSelector = () => {
   );
 };
 
-export default BrandsSelector;
+export default LocationsSelector;

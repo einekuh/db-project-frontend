@@ -3,10 +3,18 @@ import CarGrid from "@/components/CarGrid";
 import CarTypesSelector from "@/components/CarTypesSelector";
 import ColorsSelector from "@/components/ColorsSelector";
 import ConditionsSelector from "@/components/ConditionsSelector";
+import LocationsSelector from "@/components/LocationsSelector";
 import PriceSelector from "@/components/PriceSelector";
+import useListingQueryStore from "@/listingQueryStore";
 import { Grid, GridItem } from "@chakra-ui/react";
+import { useEffect } from "react";
 
 const HomePage = () => {
+  const listingQuery = useListingQueryStore((s) => s.listingQuery);
+
+  useEffect(() => {
+    console.log(listingQuery);
+  }, [listingQuery]);
   return (
     <Grid
       templateAreas={{
@@ -31,6 +39,7 @@ const HomePage = () => {
         <CarTypesSelector />
         <PriceSelector />
         <ConditionsSelector />
+        <LocationsSelector />
       </GridItem>
 
       <GridItem area="main">

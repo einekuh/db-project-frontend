@@ -27,6 +27,7 @@ import colors from "@/data/Colors";
 import brands from "@/data/Brands";
 import carTypes from "@/data/CarTypes";
 import conditions from "@/data/Conditions";
+import MyFileUpload from "./FileUpload";
 
 const MAX_CHARACTERS = 300;
 const schema = z.object({
@@ -380,29 +381,7 @@ const InsertForm = () => {
           <Field.ErrorText>{errors.description?.message}</Field.ErrorText>
         </Field.Root>
 
-        <Field.Root width={{ base: 300, md: 750 }}>
-          <Field.Label>
-            <Heading>Upload Images</Heading>
-          </Field.Label>
-          <FileUpload.Root
-            alignItems="stretch"
-            maxFiles={10}
-            accept="image/*"
-            width="100%"
-          >
-            <FileUpload.HiddenInput />
-            <FileUpload.Dropzone>
-              <Icon size="md" color="fg.muted">
-                <LuUpload />
-              </Icon>
-              <FileUpload.DropzoneContent>
-                <Box>Drag and drop images here</Box>
-                <Box color="fg.muted">.png, .jpg up to 5MB</Box>
-              </FileUpload.DropzoneContent>
-            </FileUpload.Dropzone>
-            <FileUpload.List />
-          </FileUpload.Root>
-        </Field.Root>
+        <MyFileUpload />
 
         <Button type="submit" size="xl">
           Submit

@@ -11,14 +11,14 @@ const ExpandableText = ({ children, maxChars = 100 }: Props) => {
   if (!children) return null;
 
   if (children.length <= maxChars) {
-    return <Text>{children}</Text>;
+    return <Text fontSize="130%">{children}</Text>;
   }
 
   const summary = isFullText
     ? children
     : children.substring(0, maxChars) + "...";
   return (
-    <Text>
+    <Text fontSize="130%">
       {summary}{" "}
       <Button
         marginLeft={1}

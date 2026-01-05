@@ -7,7 +7,7 @@ const UserListingsPage = () => {
   if (authStatus !== "authenticated")
     return (
       <Box marginX="37%" marginY="5%">
-        <Heading fontSize="300%">Log in to insert a car!</Heading>
+        <Heading fontSize="300%">Log in to see your cars!</Heading>
       </Box>
     );
   return (

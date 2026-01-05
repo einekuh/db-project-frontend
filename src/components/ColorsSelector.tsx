@@ -1,4 +1,5 @@
 import colors from "@/data/Colors";
+import useListingQueryStore from "@/listingQueryStore";
 import {
   Badge,
   Combobox,
@@ -11,6 +12,7 @@ import { useMemo, useState } from "react";
 const ColorsSelector = () => {
   const [searchValue, setSearchValue] = useState("");
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const setColors = useListingQueryStore((s) => s.setColors);
 
   const filteredItems = useMemo(
     () =>
@@ -27,6 +29,7 @@ const ColorsSelector = () => {
 
   const handleValueChange = (details: Combobox.ValueChangeDetails) => {
     setSelectedColors(details.value);
+    setColors(details.value);
     console.log(selectedColors);
   };
   return (

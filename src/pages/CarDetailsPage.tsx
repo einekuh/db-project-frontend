@@ -16,7 +16,9 @@ const CarDetailsPage = () => {
 
       <Box px={{ base: 4, md: 8 }} py={6}>
         <Box maxW="1100px" mx="auto">
-          <Heading mb={4}>{listing?.title}</Heading>
+          <Heading mb={4} fontSize="150%">
+            {listing?.title}
+          </Heading>
 
           <ExpandableText maxChars={300}>
             {listing?.description || ""}

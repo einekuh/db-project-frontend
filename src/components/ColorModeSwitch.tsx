@@ -5,7 +5,7 @@ import { Switch } from "./ui/switch";
 const ColorModeSwitch = () => {
   const { toggleColorMode, colorMode } = useColorMode();
   return (
-    <HStack marginX={5} marginLeft={12}>
+    <HStack marginX={5} marginLeft={20}>
       <Switch
         checked={colorMode === "dark"}
         onCheckedChange={toggleColorMode}

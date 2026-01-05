@@ -1,3 +1,4 @@
+import useListingQueryStore from "@/listingQueryStore";
 import {
   Code,
   Heading,
@@ -14,8 +15,12 @@ const PriceSelector = () => {
 
     max: 100_000,
     step: 500,
-    onValueChangeEnd: () => console.log(slider.value),
+    onValueChangeEnd: () => {
+      console.log(slider.value);
+      setPriceRange(slider.value);
+    },
   });
+  const setPriceRange = useListingQueryStore((s) => s.setPriceRange);
   return (
     <Stack align="flex-start" marginTop={5}>
       <Slider.RootProvider value={slider} width="100%" size="sm">

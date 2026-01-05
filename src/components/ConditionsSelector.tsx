@@ -1,4 +1,5 @@
 import conditions from "@/data/Conditions";
+import useListingQueryStore from "@/listingQueryStore";
 import { Portal, Select, createListCollection } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
 
@@ -9,6 +10,7 @@ const ConditionsSelector = () => {
   );
 
   const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
+  const setConditions = useListingQueryStore((s) => s.setConditions);
 
   return (
     <Select.Root
@@ -17,6 +19,7 @@ const ConditionsSelector = () => {
       onValueChange={({ value }) => {
         setSelectedConditions(value);
         console.log(selectedConditions);
+        setConditions(value);
       }}
       variant="subtle"
       marginTop={7}

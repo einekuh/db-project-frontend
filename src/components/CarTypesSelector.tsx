@@ -1,4 +1,5 @@
 import carTypes from "@/data/CarTypes";
+import useListingQueryStore from "@/listingQueryStore";
 import {
   Badge,
   Combobox,
@@ -11,6 +12,7 @@ import { useMemo, useState } from "react";
 const CarTypesSelector = () => {
   const [searchValue, setSearchValue] = useState("");
   const [selectedCarTypes, setSelectedCarTypes] = useState<string[]>([]);
+  const setCarTypes = useListingQueryStore((s) => s.setCarTypes);
 
   const filteredItems = useMemo(
     () =>
@@ -27,6 +29,7 @@ const CarTypesSelector = () => {
 
   const handleValueChange = (details: Combobox.ValueChangeDetails) => {
     setSelectedCarTypes(details.value);
+    setCarTypes(details.value);
     console.log(selectedCarTypes);
   };
   return (

@@ -20,7 +20,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { LuUpload } from "react-icons/lu";
 
 import colors from "@/data/Colors";
@@ -28,6 +28,9 @@ import brands from "@/data/Brands";
 import carTypes from "@/data/CarTypes";
 import conditions from "@/data/Conditions";
 import MyFileUpload from "./FileUpload";
+import LocationClient from "@/services/locationClient";
+import type { LocationResult } from "@/entities/LocationResult";
+import { CanceledError } from "axios";
 
 const MAX_CHARACTERS = 300;
 const schema = z.object({
@@ -44,6 +47,33 @@ const schema = z.object({
 type InsertFormData = z.infer<typeof schema>;
 
 const InsertForm = () => {
+  const [locationSearchResults, setLocationSearchResults] = useState<
+    LocationResult[]
+  >([]);
+  const [cities, setCities] = useState<string[]>([]);
+  const [error, setError] = useState("");
+  const [isLoading, setLoading] = useState(false);
+  const [searchLocation, setSearchLocation] = useState("");
+
+  const locationClient = new LocationClient();
+
+  useEffect(() => {
+    const { request, cancel } = locationClient.getResults(searchLocation);
+    setLoading(true);
+    request
+      .then((response) => {
+        setLocationSearchResults(response.data.features);
+        setLoading(false);
+        console.log(locationSearchResults);
+      })
+      .catch((error) => {
+        if (error instanceof CanceledError) return;
+        setError(error.message);
+        setLoading(false);
+      });
+    return () => cancel();
+  }, [searchLocation]);
+
   const {
     register,
     handleSubmit,
@@ -315,6 +345,18 @@ const InsertForm = () => {
             {...register("location")}
             placeholder="Enter a location"
             size="xl"
+            onChange={(e) => {
+              e.currentTarget.value.length > 3 && setCities([]);
+
+              setSearchLocation(e.currentTarget.value);
+              locationSearchResults.map((result) =>
+                setCities([
+                  ...cities,
+                  `${result.properties.name}, ${result.properties.country}`,
+                ])
+              );
+              console.log(cities);
+            }}
           />
           <Field.ErrorText>{errors.location?.message}</Field.ErrorText>
         </Field.Root>

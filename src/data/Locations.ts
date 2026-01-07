@@ -152,3 +152,5 @@ export const locations = [
   "Würzburg, Germany",
   "Zurich, Switzerland",
 ];
+
+

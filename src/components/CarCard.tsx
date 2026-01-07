@@ -8,6 +8,7 @@ import {
   HStack,
   Image,
   Portal,
+  Stack,
   Text,
 } from "@chakra-ui/react";
 import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
@@ -136,34 +137,35 @@ const CarCard = ({ listing, isUserListingCard }: Props) => {
             </Dialog.Root>
           </>
         ) : (
-          <>
-            <Box
-              marginX={1}
-              _hover={{
-                transform: "scale(1.1)",
-                transition: "transform .15s ease-in",
-                cursor: "pointer",
-              }}
-              onClick={() => setLiked(!isLiked)}
-            >
-              {isLiked ? (
-                <IoMdHeart color="red" size={20} />
-              ) : (
-                <IoMdHeartEmpty size={20} />
-              )}
-            </Box>
-            <Box marginRight={40}>
-              <Text fontSize={18} fontWeight="bold">
-                {listing.price} €
-              </Text>
-            </Box>
+          <Stack>
+            <HStack>
+              <Box
+                _hover={{
+                  transform: "scale(1.1)",
+                  transition: "transform .15s ease-in",
+                  cursor: "pointer",
+                }}
+                onClick={() => setLiked(!isLiked)}
+              >
+                {isLiked ? (
+                  <IoMdHeart color="red" size={20} />
+                ) : (
+                  <IoMdHeartEmpty size={20} />
+                )}
+              </Box>
+              <Box marginRight="10%">
+                <Text fontSize={18} fontWeight="bold">
+                  {listing.price} €
+                </Text>
+              </Box>
+            </HStack>
             <Box>
               <HStack>
                 <IoLocationOutline />
                 <Text>{listing.location}</Text>
               </HStack>
             </Box>
-          </>
+          </Stack>
         )}
       </Card.Footer>
     </Card.Root>

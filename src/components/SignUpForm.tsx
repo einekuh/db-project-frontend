@@ -2,7 +2,6 @@ import { Button, Field, Heading, Input, Stack } from "@chakra-ui/react";
 import { PasswordInput } from "./ui/password-input";
 import { useForm } from "react-hook-form";
 import useAuthStore from "@/authStore";
-import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -59,19 +58,17 @@ const SignUpForm = () => {
   const registerUser = useSignUp();
 
   const setStatus = useAuthStore((s) => s.setStatus);
-  const navigate = useNavigate();
+
   const onSubmit = handleSubmit((data) => {
     console.log(data);
     setStatus("authenticated");
     registerUser.mutate({
-      user_id: "",
+      email: data.email,
       forename: data.forename,
       surname: data.surname,
-      email: data.email,
       password: data.password,
-      created_at: "",
+      user_status: "",
     });
-    navigate("/");
   });
 
   return (

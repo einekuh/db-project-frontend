@@ -21,7 +21,7 @@ const ChatPage = () => {
     <Box>
       {/* Messages */}
 
-      <ScrollArea.Root height="57rem" width="100%">
+      <ScrollArea.Root height="83dvh" width="98%">
         <ScrollArea.Viewport
           css={{
             "--scroll-shadow-size": "4rem",
@@ -52,11 +52,11 @@ const ChatPage = () => {
       </ScrollArea.Root>
 
       {/* Input */}
-      <Box marginRight={5}>
+      <Box marginRight="3.5%">
         <InputGroup>
           <>
-            <Input placeholder="Type a message..." />
-            <Button>Send</Button>
+            <Input placeholder="Type a message..." size="2xl" margin={3} />
+            <Button size="2xl">Send</Button>
           </>
         </InputGroup>
       </Box>

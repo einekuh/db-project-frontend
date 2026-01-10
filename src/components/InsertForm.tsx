@@ -1,12 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Box,
   Button,
   Combobox,
   createListCollection,
   Field,
-  FileUpload,
   Heading,
-  Icon,
   Input,
   InputGroup,
   NumberInput,
@@ -16,12 +15,11 @@ import {
   Stack,
   Textarea,
 } from "@chakra-ui/react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo, useState } from "react";
-import { LuUpload } from "react-icons/lu";
 
 import colors from "@/data/Colors";
 import brands from "@/data/Brands";
@@ -31,6 +29,8 @@ import MyFileUpload from "./FileUpload";
 import LocationClient from "@/services/locationClient";
 import type { LocationResult } from "@/entities/LocationResult";
 import { CanceledError } from "axios";
+import useDebouncedValue from "@/hooks/useDebouncedValue";
+import useLocationsSuggestions from "@/services/locationClient";
 
 const MAX_CHARACTERS = 300;
 const schema = z.object({
@@ -47,46 +47,30 @@ const schema = z.object({
 type InsertFormData = z.infer<typeof schema>;
 
 const InsertForm = () => {
-  const [locationSearchResults, setLocationSearchResults] = useState<
-    LocationResult[]
-  >([]);
-  const [cities, setCities] = useState<string[]>([]);
-  const [error, setError] = useState("");
-  const [isLoading, setLoading] = useState(false);
-  const [searchLocation, setSearchLocation] = useState("");
-
-  const locationClient = new LocationClient();
-
-  useEffect(() => {
-    const { request, cancel } = locationClient.getResults(searchLocation);
-    setLoading(true);
-    request
-      .then((response) => {
-        setLocationSearchResults(response.data.features);
-        setLoading(false);
-        console.log(locationSearchResults);
-      })
-      .catch((error) => {
-        if (error instanceof CanceledError) return;
-        setError(error.message);
-        setLoading(false);
-      });
-    return () => cancel();
-  }, [searchLocation]);
-
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors },
     control,
   } = useForm<InsertFormData>({ resolver: zodResolver(schema) });
+
+  const locationValue = useWatch({ control, name: "location" }) ?? "";
+
+  const debouncedSearchLocation = useDebouncedValue(locationValue, 500);
+  const { data, isFetching } = useLocationsSuggestions(debouncedSearchLocation);
+
+  const suggestions =
+    data?.features?.map(
+      (r) => `${r.properties.name}, ${r.properties.country}`
+    ) ?? [];
 
   const navigate = useNavigate();
   const onSubmit = handleSubmit((data) => {
     console.log(data);
     navigate("/");
   });
-  const [value, setValue] = useState("");
+  const [description, setDescription] = useState("");
 
   //////////////////////////////////////////////////////////////
   const [searchValueColor, setSearchValueColor] = useState("");
@@ -144,7 +128,6 @@ const InsertForm = () => {
           <Input {...register("title")} placeholder="Enter a title" size="xl" />
           <Field.ErrorText>{errors.title?.message}</Field.ErrorText>
         </Field.Root>
-
         <Field.Root invalid={!!errors.brand} width={{ base: 300, md: 750 }}>
           <Field.Label>
             <Heading>Brand</Heading>
@@ -192,7 +175,6 @@ const InsertForm = () => {
 
           <Field.ErrorText>{errors.brand?.message as string}</Field.ErrorText>
         </Field.Root>
-
         <Field.Root invalid={!!errors.color} width={{ base: 300, md: 750 }}>
           <Field.Label>
             <Heading>Color</Heading>
@@ -240,7 +222,6 @@ const InsertForm = () => {
 
           <Field.ErrorText>{errors.color?.message as string}</Field.ErrorText>
         </Field.Root>
-
         <Field.Root invalid={!!errors.carType} width={{ base: 300, md: 750 }}>
           <Field.Label>
             <Heading>Car type</Heading>
@@ -288,7 +269,6 @@ const InsertForm = () => {
 
           <Field.ErrorText>{errors.carType?.message as string}</Field.ErrorText>
         </Field.Root>
-
         <Field.Root invalid={!!errors.condition} width={{ base: 300, md: 750 }}>
           <Field.Label>
             <Heading>Condition</Heading>
@@ -336,31 +316,58 @@ const InsertForm = () => {
 
           <Field.ErrorText>{errors.condition?.message}</Field.ErrorText>
         </Field.Root>
-
         <Field.Root invalid={!!errors.location} width={{ base: 300, md: 750 }}>
           <Field.Label>
             <Heading>City</Heading>
           </Field.Label>
-          <Input
-            {...register("location")}
-            placeholder="Enter a location"
-            size="xl"
-            onChange={(e) => {
-              e.currentTarget.value.length > 3 && setCities([]);
 
-              setSearchLocation(e.currentTarget.value);
-              locationSearchResults.map((result) =>
-                setCities([
-                  ...cities,
-                  `${result.properties.name}, ${result.properties.country}`,
-                ])
-              );
-              console.log(cities);
-            }}
-          />
+          <Box position="relative" width="100%">
+            <Input
+              {...register("location")}
+              placeholder="Enter a location"
+              size="xl"
+              autoComplete="off"
+            />
+
+            {locationValue.trim().length > 3 && suggestions.length > 0 && (
+              <Box
+                position="absolute"
+                top="100%"
+                left={0}
+                right={0}
+                mt="2"
+                bg="gray.950"
+                borderWidth="1px"
+                borderRadius="md"
+                zIndex="dropdown"
+                maxH="240px"
+                overflowY="auto"
+              >
+                {suggestions.map((s) => (
+                  <Box
+                    key={s}
+                    px="3"
+                    py="2"
+                    cursor="pointer"
+                    _hover={{ bg: "gray.900" }}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      setValue("location", s, {
+                        shouldDirty: true,
+                        shouldValidate: true,
+                      });
+                    }}
+                  >
+                    {s}
+                  </Box>
+                ))}
+              </Box>
+            )}
+          </Box>
+
           <Field.ErrorText>{errors.location?.message}</Field.ErrorText>
         </Field.Root>
-
+        s
         <Field.Root invalid={!!errors.price} width={{ base: 300, md: 750 }}>
           <Field.Label>
             <Heading>Price</Heading>
@@ -393,7 +400,6 @@ const InsertForm = () => {
           />
           <Field.ErrorText>{errors.price?.message}</Field.ErrorText>
         </Field.Root>
-
         <Field.Root
           invalid={!!errors.description}
           width={{ base: 300, md: 750 }}
@@ -404,7 +410,7 @@ const InsertForm = () => {
           <InputGroup
             endElement={
               <Span color="fg.muted" textStyle="xs">
-                {value.length} / {MAX_CHARACTERS}
+                {description.length} / {MAX_CHARACTERS}
               </Span>
             }
           >
@@ -415,16 +421,14 @@ const InsertForm = () => {
               placeholder="Write a short description"
               maxLength={MAX_CHARACTERS}
               onChange={(e) => {
-                setValue(e.currentTarget.value.slice(0, MAX_CHARACTERS));
+                setDescription(e.currentTarget.value.slice(0, MAX_CHARACTERS));
               }}
               size="xl"
             />
           </InputGroup>
           <Field.ErrorText>{errors.description?.message}</Field.ErrorText>
         </Field.Root>
-
         <MyFileUpload />
-
         <Button type="submit" size="xl">
           Submit
         </Button>

@@ -6,7 +6,7 @@ const UserListingsPage = () => {
   const authStatus = useAuthStore((s) => s.authStatus);
   if (authStatus !== "authenticated")
     return (
-      <Box marginX="37%" marginY="5%">
+      <Box textAlign="center" marginTop={100}>
         <Heading fontSize="300%">Log in to see your cars!</Heading>
       </Box>
     );

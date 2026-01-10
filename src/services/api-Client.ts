@@ -1,32 +1,22 @@
-import axios, { type AxiosRequestConfig } from "axios";
+import type User from "@/entities/User";
+import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://jsonplaceholder.typicode.com",
+  baseURL: "https://localhost:8000/",
   params: {},
 });
 
-export interface FetchResponse<T> {
-  count: number;
-  next: string | null;
-  results: T[];
-}
-
-class APIClient<T> {
-  endpoint: string;
-
-  constructor(endpoint: string) {
-    this.endpoint = endpoint;
-  }
-
-  getAll = (config?: AxiosRequestConfig) => {
-    return axiosInstance
-      .get<FetchResponse<T>>(this.endpoint, config)
-      .then((res) => res.data);
+class APIClient {
+  signup = (user: User) => {
+    return axiosInstance.post("/register", user).then((res) => res.data);
   };
-  get = (id: number | string) => {
-    return axiosInstance
-      .get<T>(this.endpoint + "/" + id)
-      .then((res) => res.data);
+
+  login = (user: User) => {
+    return axiosInstance.post("/register", user).then((res) => res.data);
+  };
+
+  me = (user_id: string) => {
+    return axiosInstance.get(`/users/${user_id}`).then((res) => res.data);
   };
 }
 

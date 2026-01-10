@@ -6,9 +6,11 @@ import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import useSignUp from "@/hooks/useSignUp";
+
 async function isEmailAvailable(email: string): Promise<boolean> {
   /* const res = await fetch(
-    `/api/auth/email-available?email=${encodeURIComponent(email)}`
+    `/api/auth/email-available?email=${encodeURIComponent(email)}` 
   );
   if (!res.ok) return false;
   const data = await res.json(); // { available: boolean }
@@ -54,11 +56,21 @@ const SignUpForm = () => {
     formState: { errors },
   } = useForm<SignUpFormData>({ resolver: zodResolver(schema) });
 
+  const registerUser = useSignUp();
+
   const setStatus = useAuthStore((s) => s.setStatus);
   const navigate = useNavigate();
   const onSubmit = handleSubmit((data) => {
     console.log(data);
     setStatus("authenticated");
+    registerUser.mutate({
+      user_id: "",
+      forename: data.forename,
+      surname: data.surname,
+      email: data.email,
+      password: data.password,
+      created_at: "",
+    });
     navigate("/");
   });
 

@@ -1,13 +1,10 @@
 import {
-  Box,
   Button,
   Combobox,
   createListCollection,
   Field,
-  FileUpload,
   Heading,
   HStack,
-  Icon,
   Input,
   InputGroup,
   NumberInput,
@@ -21,7 +18,6 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo, useState } from "react";
-import { LuUpload } from "react-icons/lu";
 
 import colors from "@/data/Colors";
 import brands from "@/data/Brands";
@@ -30,6 +26,7 @@ import conditions from "@/data/Conditions";
 import type { ListingDetails } from "@/entities/Listing";
 
 import CarThumbnails from "./CarThumbnails";
+import MyFileUpload from "./FileUpload";
 
 const MAX_CHARACTERS = 300;
 const schema = z.object({
@@ -416,31 +413,7 @@ const EditForm = ({ listing }: Props) => {
           <Field.ErrorText>{errors.description?.message}</Field.ErrorText>
         </Field.Root>
         <CarThumbnails images={listing.images} edit={edit} />
-        {edit ? (
-          <Field.Root width={{ base: 300, md: 750 }}>
-            <Field.Label>
-              <Heading>Upload Images</Heading>
-            </Field.Label>
-            <FileUpload.Root
-              alignItems="stretch"
-              maxFiles={10}
-              accept="image/*"
-              width="100%"
-            >
-              <FileUpload.HiddenInput />
-              <FileUpload.Dropzone>
-                <Icon size="md" color="fg.muted">
-                  <LuUpload />
-                </Icon>
-                <FileUpload.DropzoneContent>
-                  <Box>Drag and drop images here</Box>
-                  <Box color="fg.muted">.png, .jpg up to 5MB</Box>
-                </FileUpload.DropzoneContent>
-              </FileUpload.Dropzone>
-              <FileUpload.List />
-            </FileUpload.Root>
-          </Field.Root>
-        ) : null}
+        {edit ? <MyFileUpload /> : null}
 
         <HStack>
           <Button

@@ -6,7 +6,7 @@ const InsertPage = () => {
   const authStatus = useAuthStore((s) => s.authStatus);
   if (authStatus !== "authenticated")
     return (
-      <Box marginX="37%" marginY="5%">
+      <Box textAlign="center" marginTop={100}>
         <Heading fontSize="300%">Log in to insert a car!</Heading>
       </Box>
     );

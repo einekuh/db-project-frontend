@@ -5,5 +5,8 @@ export default interface User {
   email?: string;
   password?: string;
   created_at?: string;
+  is_active?: boolean;
+  is_superuser?: boolean;
+  is_verified?: boolean;
   user_status?: string;
 }

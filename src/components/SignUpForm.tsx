@@ -26,15 +26,6 @@ const schema = z.object({
     .refine(async (email) => await isEmailAvailable(email), {
       message: "Email already exists",
     }),
-  username: z
-    .string()
-    .trim()
-    .min(3, "Username must be at least 3 characters")
-    .max(20, "Username must be at most 20 characters")
-    .regex(
-      /^[a-zA-Z0-9_]+$/,
-      "Username may contain only letters, numbers, and _"
-    ),
   forename: z.string().trim().min(1, "First name is required").max(50),
   surname: z.string().trim().min(1, "Last name is required").max(50),
   password: z
@@ -67,7 +58,10 @@ const SignUpForm = () => {
       forename: data.forename,
       surname: data.surname,
       password: data.password,
-      user_status: "",
+      user_status: "active",
+      is_active: true,
+      is_superuser: false,
+      is_verified: true,
     });
   });
 
@@ -76,6 +70,7 @@ const SignUpForm = () => {
       <Heading marginY={16} fontSize="250%">
         Sign up!
       </Heading>
+
       <Stack gap="4" align="flex-start">
         <Field.Root invalid={!!errors.forename} width={{ base: 300, md: 750 }}>
           <Field.Label>
@@ -109,13 +104,6 @@ const SignUpForm = () => {
           <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
         </Field.Root>
 
-        <Field.Root invalid={!!errors.username} width={{ base: 300, md: 750 }}>
-          <Field.Label>
-            <Heading>Username</Heading>
-          </Field.Label>
-          <Input {...register("username")} size="xl" />
-          <Field.ErrorText>{errors.username?.message}</Field.ErrorText>
-        </Field.Root>
         <Button size="xl" type="submit">
           Submit
         </Button>

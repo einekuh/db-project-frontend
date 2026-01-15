@@ -2,9 +2,11 @@ import CarAttributes from "@/components/CarAttributes";
 import CarPictures from "@/components/CarPictures";
 import ExpandableText from "@/components/ExpandableText";
 import { listingDetails } from "@/entities/Listing";
-import { Box, Heading } from "@chakra-ui/react";
-import { useParams } from "react-router-dom";
+import { Box, Text, Heading, HStack } from "@chakra-ui/react";
+import { Link as ChakraLink } from "@chakra-ui/react";
 
+import { Link, useParams } from "react-router-dom";
+import { FaRegPaperPlane } from "react-icons/fa";
 const CarDetailsPage = () => {
   const { listing_id } = useParams();
   const listing = listingDetails.find((l) => l.listing_id === listing_id);
@@ -27,7 +29,16 @@ const CarDetailsPage = () => {
           <Box mt={6}>
             <CarAttributes car={listing?.car || null} />
           </Box>
-
+          <Box mt={6}>
+            <Link to="/chats">
+              <ChakraLink>
+                <HStack>
+                  <FaRegPaperPlane />
+                  <Text fontWeight="bold">Contact the Seller</Text>
+                </HStack>
+              </ChakraLink>
+            </Link>
+          </Box>
           <Box mt={6}>
             <CarPictures images={listing?.images || null} />
           </Box>

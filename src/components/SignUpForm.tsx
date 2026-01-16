@@ -26,15 +26,14 @@ const schema = z.object({
     .refine(async (email) => await isEmailAvailable(email), {
       message: "Email already exists",
     }),
-  forename: z.string().trim().min(1, "First name is required").max(50),
-  surname: z.string().trim().min(1, "Last name is required").max(50),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
+  first_name: z.string().trim().min(1, "First name is required").max(50),
+  last_name: z.string().trim().min(1, "Last name is required").max(50),
+  password: z.string(),
+  /*.min(8, "Password must be at least 8 characters")
     .max(72, "Password must be at most 72 characters")
     .regex(/[a-z]/, "Password must contain a lowercase letter")
     .regex(/[A-Z]/, "Password must contain an uppercase letter")
-    .regex(/[0-9]/, "Password must contain a number"),
+    .regex(/[0-9]/, "Password must contain a number")*/
 });
 
 type SignUpFormData = z.infer<typeof schema>;
@@ -55,13 +54,9 @@ const SignUpForm = () => {
     setStatus("authenticated");
     registerUser.mutate({
       email: data.email,
-      forename: data.forename,
-      surname: data.surname,
+      first_name: data.first_name,
+      last_name: data.last_name,
       password: data.password,
-      user_status: "active",
-      is_active: true,
-      is_superuser: false,
-      is_verified: true,
     });
   });
 
@@ -72,20 +67,23 @@ const SignUpForm = () => {
       </Heading>
 
       <Stack gap="4" align="flex-start">
-        <Field.Root invalid={!!errors.forename} width={{ base: 300, md: 750 }}>
+        <Field.Root
+          invalid={!!errors.first_name}
+          width={{ base: 300, md: 750 }}
+        >
           <Field.Label>
-            <Heading>Forename</Heading>
+            <Heading>First Name</Heading>
           </Field.Label>
-          <Input {...register("forename")} size="xl" />
-          <Field.ErrorText>{errors.forename?.message}</Field.ErrorText>
+          <Input {...register("first_name")} size="xl" />
+          <Field.ErrorText>{errors.first_name?.message}</Field.ErrorText>
         </Field.Root>
 
-        <Field.Root invalid={!!errors.surname} width={{ base: 300, md: 750 }}>
+        <Field.Root invalid={!!errors.last_name} width={{ base: 300, md: 750 }}>
           <Field.Label>
-            <Heading>Surname</Heading>
+            <Heading>Last Name</Heading>
           </Field.Label>
-          <Input {...register("surname")} size="xl" />
-          <Field.ErrorText>{errors.surname?.message}</Field.ErrorText>
+          <Input {...register("last_name")} size="xl" />
+          <Field.ErrorText>{errors.last_name?.message}</Field.ErrorText>
         </Field.Root>
 
         <Field.Root invalid={!!errors.email} width={{ base: 300, md: 750 }}>

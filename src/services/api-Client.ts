@@ -1,4 +1,3 @@
-import type User from "@/entities/User";
 import axios from "axios";
 
 const axiosInstance = axios.create({
@@ -6,15 +5,15 @@ const axiosInstance = axios.create({
   params: {},
 });
 
-class APIClient {
+class APIClient<T> {
   endpoint;
 
   constructor(endpoint: string) {
     this.endpoint = endpoint;
   }
 
-  post = (user: User) => {
-    return axiosInstance.post(this.endpoint, user).then((res) => res.data);
+  post = (entity: T) => {
+    return axiosInstance.post(this.endpoint, entity).then((res) => res.data);
   };
 }
 

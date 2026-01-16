@@ -10,3 +10,10 @@ export default interface User {
   is_verified?: boolean;
   user_status?: string;
 }
+
+export interface UserCreate {
+  email: string;
+  password: string;
+  first_name: string;
+  last_name: string;
+}

@@ -1,10 +1,10 @@
-import { Button, Field, Heading, Input, Stack } from "@chakra-ui/react";
+import { Button, Field, Heading, Input, Stack, Text } from "@chakra-ui/react";
 import { PasswordInput } from "./ui/password-input";
 import { useForm } from "react-hook-form";
-import useAuthStore from "@/authStore";
-import { useNavigate } from "react-router-dom";
+
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import useLogin from "@/hooks/useLogin";
 
 const schema = z.object({
   email: z.string(),
@@ -20,14 +20,11 @@ const LoginForm = () => {
     formState: { errors },
   } = useForm<LoginFormData>({ resolver: zodResolver(schema) });
 
-  //const authStatus =useAuthStore(s => s.authStatus);
-  const setStatus = useAuthStore((s) => s.setStatus);
-  const navigate = useNavigate();
+  const loginUser = useLogin();
 
   const onSubmit = handleSubmit((data) => {
     console.log(data);
-    setStatus("authenticated");
-    navigate("/");
+    loginUser.mutate(data);
   });
 
   return (
@@ -50,6 +47,13 @@ const LoginForm = () => {
           <PasswordInput {...register("password")} size="xl" />
           <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
         </Field.Root>
+        <Text color="red">
+          {loginUser.isError
+            ? loginUser.error?.message === "Request failed with status code 400"
+              ? "No user with this E-mail and Password exists! Try Again!"
+              : "Something went wrong!"
+            : null}
+        </Text>
         <Button size="xl" type="submit">
           Submit
         </Button>

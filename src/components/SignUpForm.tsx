@@ -28,12 +28,13 @@ const schema = z.object({
     }),
   first_name: z.string().trim().min(1, "First name is required").max(50),
   last_name: z.string().trim().min(1, "Last name is required").max(50),
-  password: z.string(),
-  /*.min(8, "Password must be at least 8 characters")
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
     .max(72, "Password must be at most 72 characters")
     .regex(/[a-z]/, "Password must contain a lowercase letter")
     .regex(/[A-Z]/, "Password must contain an uppercase letter")
-    .regex(/[0-9]/, "Password must contain a number")*/
+    .regex(/[0-9]/, "Password must contain a number"),
 });
 
 type SignUpFormData = z.infer<typeof schema>;

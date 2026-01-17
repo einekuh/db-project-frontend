@@ -1,12 +1,13 @@
 import useAuthStore from "@/authStore";
+import useLogout from "@/hooks/useLogout";
 import { Box, Button, HStack } from "@chakra-ui/react";
 import { CgProfile } from "react-icons/cg";
 import { Link, useNavigate } from "react-router-dom";
 
 const Auth = () => {
-  const { authStatus, setStatus } = useAuthStore();
+  const { authStatus } = useAuthStore();
+  const logoutUser = useLogout();
   const navigate = useNavigate();
-
   if (authStatus === "authenticated")
     return (
       <HStack margin={2} width={100}>
@@ -15,8 +16,7 @@ const Auth = () => {
           marginRight={1}
           size="xl"
           onClick={() => {
-            setStatus("anonymous");
-            navigate("/");
+            logoutUser.mutate();
           }}
         >
           Log Out

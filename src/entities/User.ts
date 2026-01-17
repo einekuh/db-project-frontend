@@ -22,3 +22,9 @@ export interface UserLogin {
   email: string;
   password: string;
 }
+
+export interface UserUpdate {
+  email?: string;
+  first_name?: string;
+  last_name?: string;
+}

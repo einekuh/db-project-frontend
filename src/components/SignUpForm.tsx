@@ -1,7 +1,7 @@
-import { Button, Field, Heading, Input, Stack } from "@chakra-ui/react";
+import { Button, Field, Heading, Input, Stack, Text } from "@chakra-ui/react";
 import { PasswordInput } from "./ui/password-input";
 import { useForm } from "react-hook-form";
-import useAuthStore from "@/authStore";
+
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -28,13 +28,12 @@ const schema = z.object({
     }),
   first_name: z.string().trim().min(1, "First name is required").max(50),
   last_name: z.string().trim().min(1, "Last name is required").max(50),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
+  password: z.string(),
+  /*.min(8, "Password must be at least 8 characters")
     .max(72, "Password must be at most 72 characters")
     .regex(/[a-z]/, "Password must contain a lowercase letter")
     .regex(/[A-Z]/, "Password must contain an uppercase letter")
-    .regex(/[0-9]/, "Password must contain a number"),
+    .regex(/[0-9]/, "Password must contain a number"),*/
 });
 
 type SignUpFormData = z.infer<typeof schema>;
@@ -45,14 +44,10 @@ const SignUpForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<SignUpFormData>({ resolver: zodResolver(schema) });
-
   const registerUser = useSignUp();
-
-  const setStatus = useAuthStore((s) => s.setStatus);
 
   const onSubmit = handleSubmit((data) => {
     console.log(data);
-    setStatus("authenticated");
     registerUser.mutate({
       email: data.email,
       first_name: data.first_name,
@@ -102,7 +97,14 @@ const SignUpForm = () => {
           <PasswordInput {...register("password")} size="xl" />
           <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
         </Field.Root>
-
+        <Text color="red">
+          {registerUser.isError
+            ? registerUser.error?.message ===
+              "Request failed with status code 400"
+              ? "A user with this email already exists!"
+              : "Something went wrong!"
+            : null}
+        </Text>
         <Button size="xl" type="submit">
           Submit
         </Button>

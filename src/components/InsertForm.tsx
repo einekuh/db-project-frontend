@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  Box,
   Button,
   Combobox,
   createListCollection,
@@ -15,22 +14,23 @@ import {
   Stack,
   Textarea,
 } from "@chakra-ui/react";
-import { Controller, useForm, useWatch } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import colors from "@/data/Colors";
 import brands from "@/data/Brands";
 import carTypes from "@/data/CarTypes";
 import conditions from "@/data/Conditions";
 import MyFileUpload from "./FileUpload";
-import LocationClient from "@/services/locationClient";
+import { locations } from "@/data/Locations";
+/*import LocationClient from "@/services/locationClient";
 import type { LocationResult } from "@/entities/LocationResult";
 import { CanceledError } from "axios";
 import useDebouncedValue from "@/hooks/useDebouncedValue";
-import useLocationsSuggestions from "@/services/locationClient";
+import useLocationsSuggestions from "@/services/locationClient";*/
 
 const MAX_CHARACTERS = 300;
 const schema = z.object({
@@ -49,14 +49,13 @@ type InsertFormData = z.infer<typeof schema>;
 const InsertForm = () => {
   const {
     register,
-    setValue,
+    //setValue,
     handleSubmit,
     formState: { errors },
     control,
   } = useForm<InsertFormData>({ resolver: zodResolver(schema) });
 
-  const locationValue = useWatch({ control, name: "location" }) ?? "";
-
+  /*const locationValue = useWatch({ control, name: "location" }) ?? "";
   const debouncedSearchLocation = useDebouncedValue(locationValue, 500);
   const { data, isFetching } = useLocationsSuggestions(debouncedSearchLocation);
 
@@ -64,7 +63,7 @@ const InsertForm = () => {
     data?.features?.map(
       (r) => `${r.properties.name}, ${r.properties.country}`
     ) ?? [];
-
+*/
   const navigate = useNavigate();
   const onSubmit = handleSubmit((data) => {
     console.log(data);
@@ -83,7 +82,7 @@ const InsertForm = () => {
 
   const colorCollection = useMemo(
     () => createListCollection({ items: filteredColors }),
-    [filteredColors]
+    [filteredColors],
   );
   //////////////////////////////////////////////////////////////
   const [searchValueBrand, setSearchValueBrand] = useState("");
@@ -96,7 +95,7 @@ const InsertForm = () => {
 
   const brandCollection = useMemo(
     () => createListCollection({ items: filteredBrands }),
-    [filteredBrands]
+    [filteredBrands],
   );
 
   //////////////////////////////////////////////////////////////
@@ -110,7 +109,23 @@ const InsertForm = () => {
 
   const carTypeCollection = useMemo(
     () => createListCollection({ items: filteredCarTypes }),
-    [filteredCarTypes]
+    [filteredCarTypes],
+  );
+
+  //////////////////////////////////////////////////////////////
+
+  //////////////////////////////////////////////////////////////
+  const [searchValueLocation, setSearchValueLocation] = useState("");
+
+  const filteredLocations = useMemo(() => {
+    const q = searchValueLocation.trim().toLowerCase();
+    if (!q) return [...locations];
+    return locations.filter((b) => b.toLowerCase().includes(q));
+  }, [searchValueLocation]);
+
+  const locationsCollection = useMemo(
+    () => createListCollection({ items: filteredLocations }),
+    [filteredLocations],
   );
 
   //////////////////////////////////////////////////////////////
@@ -320,8 +335,46 @@ const InsertForm = () => {
           <Field.Label>
             <Heading>City</Heading>
           </Field.Label>
+          <Controller
+            control={control}
+            name="location"
+            render={({ field }) => (
+              <Combobox.Root
+                collection={locationsCollection}
+                value={field.value ? [field.value] : []}
+                onValueChange={({ value }) => field.onChange(value[0] ?? "")}
+                onInputValueChange={(details) =>
+                  setSearchValueLocation(details.inputValue)
+                }
+                onInteractOutside={() => field.onBlur()}
+                size="lg"
+              >
+                <Combobox.Control>
+                  <Combobox.Input placeholder="Select a location" />
+                  <Combobox.IndicatorGroup>
+                    <Combobox.ClearTrigger />
+                    <Combobox.Trigger />
+                  </Combobox.IndicatorGroup>
+                </Combobox.Control>
 
-          <Box position="relative" width="100%">
+                <Portal>
+                  <Combobox.Positioner>
+                    <Combobox.Content>
+                      <Combobox.Empty>No locations found</Combobox.Empty>
+
+                      {locationsCollection.items.map((item) => (
+                        <Combobox.Item key={item} item={item}>
+                          {item}
+                          <Combobox.ItemIndicator />
+                        </Combobox.Item>
+                      ))}
+                    </Combobox.Content>
+                  </Combobox.Positioner>
+                </Portal>
+              </Combobox.Root>
+            )}
+          />
+          {/*<Box position="relative" width="100%">
             <Input
               {...register("location")}
               placeholder="Enter a location"
@@ -362,12 +415,12 @@ const InsertForm = () => {
                   </Box>
                 ))}
               </Box>
-            )}
-          </Box>
+          )}
+          </Box>*/}
 
           <Field.ErrorText>{errors.location?.message}</Field.ErrorText>
         </Field.Root>
-        s
+
         <Field.Root invalid={!!errors.price} width={{ base: 300, md: 750 }}>
           <Field.Label>
             <Heading>Price</Heading>

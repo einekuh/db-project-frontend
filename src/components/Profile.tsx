@@ -1,29 +1,31 @@
 import {
+  Box,
   Button,
+  CloseButton,
+  Dialog,
   Field,
   Heading,
   HStack,
   Input,
-  InputGroup,
-  Span,
+  Portal,
+  Spinner,
   Stack,
-  Textarea,
+  Text,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useState } from "react";
+import useMe from "@/hooks/useMe";
+import useUpdateUser from "@/hooks/useUpdateUser";
+import useDeleteUser from "@/hooks/useDeleteUser";
 
 const schema = z.object({
   email: z.string(),
-  forename: z.string(),
-  surname: z.string(),
-  username: z.string(),
-  about: z.string(),
+  first_name: z.string(),
+  last_name: z.string(),
 });
-
-const MAX_CHARACTERS = 500;
 
 type ProfileFormData = z.infer<typeof schema>;
 
@@ -34,11 +36,29 @@ const Profile = () => {
     formState: { errors },
   } = useForm<ProfileFormData>({ resolver: zodResolver(schema) });
   const [edit, setEdit] = useState(false);
+
+  const updateUser = useUpdateUser();
+
   const onSubmit = handleSubmit((data) => {
     console.log(data);
+    updateUser.mutate(data);
   });
 
-  const [value, setValue] = useState("");
+  const { data, error, isLoading } = useMe(3);
+
+  const delteUser = useDeleteUser();
+
+  const handleDelete = () => {
+    delteUser.mutate(data.user_id);
+  };
+
+  /////////////////////////////////////////////////////////////////////////////////////
+
+  /////////////////////////////////////////////////////////////////////////////////////
+
+  if (error) return error.message;
+
+  if (isLoading) return <Spinner />;
 
   return (
     <form onSubmit={onSubmit}>
@@ -46,43 +66,33 @@ const Profile = () => {
         Your Profile!
       </Heading>
       <Stack gap="4" align="flex-start">
-        <Field.Root invalid={!!errors.forename} width={{ base: 300, md: 750 }}>
+        <Field.Root
+          invalid={!!errors.first_name}
+          width={{ base: 300, md: 750 }}
+        >
           <Field.Label>
-            <Heading>Forename</Heading>
+            <Heading>First Name</Heading>
           </Field.Label>
           <Input
-            {...register("forename")}
+            {...register("first_name")}
             disabled={!edit}
-            value={"hier wird der name dynamisch geladen"}
+            defaultValue={data.first_name}
             size="xl"
           />
-          <Field.ErrorText>{errors.forename?.message}</Field.ErrorText>
+          <Field.ErrorText>{errors.first_name?.message}</Field.ErrorText>
         </Field.Root>
 
-        <Field.Root invalid={!!errors.surname} width={{ base: 300, md: 750 }}>
+        <Field.Root invalid={!!errors.last_name} width={{ base: 300, md: 750 }}>
           <Field.Label>
-            <Heading>Surname</Heading>
+            <Heading>Last Name</Heading>
           </Field.Label>
           <Input
-            {...register("surname")}
+            {...register("last_name")}
             disabled={!edit}
-            value={"hier wird der name dynamisch geladen"}
+            defaultValue={data.last_name}
             size="xl"
           />
-          <Field.ErrorText>{errors.surname?.message}</Field.ErrorText>
-        </Field.Root>
-
-        <Field.Root invalid={!!errors.username} width={{ base: 300, md: 750 }}>
-          <Field.Label>
-            <Heading>Username</Heading>
-          </Field.Label>
-          <Input
-            {...register("username")}
-            disabled={!edit}
-            value={"hier wird der username dynamisch geladen"}
-            size="xl"
-          />
-          <Field.ErrorText>{errors.username?.message}</Field.ErrorText>
+          <Field.ErrorText>{errors.last_name?.message}</Field.ErrorText>
         </Field.Root>
 
         <Field.Root invalid={!!errors.email} width={{ base: 300, md: 750 }}>
@@ -92,55 +102,82 @@ const Profile = () => {
           <Input
             {...register("email")}
             disabled={!edit}
-            value={"hier wird die email dynamisch geladen"}
+            defaultValue={data.email}
             size="xl"
           />
           <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
         </Field.Root>
-        <Field.Root invalid={!!errors.about} width={{ base: 300, md: 750 }}>
-          <Field.Label>
-            <Heading>About</Heading>
-          </Field.Label>
-          <InputGroup
-            endElement={
-              <Span color="fg.muted" textStyle="xs">
-                {value.length} / {MAX_CHARACTERS}
-              </Span>
-            }
-          >
-            <Textarea
-              {...register("about")}
-              variant="outline"
-              autoresize
-              placeholder="Write something about yourself!"
-              maxLength={MAX_CHARACTERS}
-              onChange={(e) => {
-                setValue(e.currentTarget.value.slice(0, MAX_CHARACTERS));
-              }}
-              disabled={!edit}
-              value={""}
-              size="xl"
-            />
-          </InputGroup>
-          <Field.ErrorText>{errors.about?.message}</Field.ErrorText>
-        </Field.Root>
+
         <HStack>
           <Button
-            type={edit ? "submit" : "button"}
+            type="button"
             onClick={() => setEdit(!edit)}
             size="xl"
+            hidden={edit}
           >
-            {edit ? "Submit" : "Edit"}
+            Edit
+          </Button>
+          <Button
+            type="submit"
+            onClick={() => setEdit(!edit)}
+            size="xl"
+            hidden={!edit}
+          >
+            Submit
           </Button>
           <Button
             size="xl"
-            type={"button"}
+            type="reset"
             hidden={!edit}
-            onClick={() => setEdit(!edit)}
+            onClick={() => {
+              setEdit(!edit);
+            }}
           >
             Cancel
           </Button>
         </HStack>
+        <Box marginTop="10%">
+          <Dialog.Root motionPreset="slide-in-bottom" size="sm">
+            <Dialog.Trigger asChild>
+              <Button variant="outline" colorPalette="red">
+                Delete Account
+              </Button>
+            </Dialog.Trigger>
+            <Portal>
+              <Dialog.Backdrop />
+              <Dialog.Positioner>
+                <Dialog.Content>
+                  <Dialog.Header>
+                    <Dialog.Title>
+                      <Text>Delete</Text>
+                    </Dialog.Title>
+                  </Dialog.Header>
+                  <Dialog.Body>
+                    <Text>
+                      Do you really want to delete this listing? It will not be
+                      possible to restore it!
+                    </Text>
+                  </Dialog.Body>
+                  <Dialog.Footer>
+                    <Dialog.ActionTrigger asChild>
+                      <Button variant="outline">Cancel</Button>
+                    </Dialog.ActionTrigger>
+                    <Button
+                      variant="outline"
+                      colorPalette="red"
+                      onClick={handleDelete}
+                    >
+                      Delete
+                    </Button>
+                  </Dialog.Footer>
+                  <Dialog.CloseTrigger asChild>
+                    <CloseButton size="sm" />
+                  </Dialog.CloseTrigger>
+                </Dialog.Content>
+              </Dialog.Positioner>
+            </Portal>
+          </Dialog.Root>
+        </Box>
       </Stack>
     </form>
   );

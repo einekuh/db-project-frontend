@@ -1,4 +1,4 @@
-import useAuthStore from "@/authStore";
+import useAuthStore from "@/stores/authStore";
 import FavoriteGrid from "@/components/FavoriteGrid";
 import { Box, Heading } from "@chakra-ui/react";
 

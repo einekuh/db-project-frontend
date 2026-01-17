@@ -1,12 +1,19 @@
-import conditions from "@/data/Conditions";
-import useListingQueryStore from "@/listingQueryStore";
+import useListingQueryStore from "@/stores/listingQueryStore";
+import useStaticDataStore from "@/stores/staticDataStore";
 import { Portal, Select, createListCollection } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
 
 const ConditionsSelector = () => {
+  const conditions = useStaticDataStore((s) => s.conditions);
+
+  const cond = useMemo(
+    () => conditions.map((c) => c.condition_type),
+    [conditions],
+  );
+
   const conditionCollection = useMemo(
-    () => createListCollection({ items: conditions }),
-    []
+    () => createListCollection({ items: cond }),
+    [cond],
   );
 
   const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
@@ -45,8 +52,11 @@ const ConditionsSelector = () => {
         <Select.Positioner>
           <Select.Content>
             {conditions.map((condition) => (
-              <Select.Item key={condition} item={condition}>
-                {condition}
+              <Select.Item
+                key={condition.condition_id}
+                item={condition.condition_type}
+              >
+                {condition.condition_type}
                 <Select.ItemIndicator />
               </Select.Item>
             ))}

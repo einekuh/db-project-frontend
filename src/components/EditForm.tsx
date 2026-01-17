@@ -19,14 +19,11 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo, useState } from "react";
 
-import colors from "@/data/Colors";
-import brands from "@/data/Brands";
-import carTypes from "@/data/CarTypes";
-import conditions from "@/data/Conditions";
 import type { ListingDetails } from "@/entities/Listing";
 
 import CarThumbnails from "./CarThumbnails";
 import MyFileUpload from "./FileUpload";
+import useStaticDataStore from "@/stores/staticDataStore";
 
 const MAX_CHARACTERS = 300;
 const schema = z.object({
@@ -79,46 +76,59 @@ const EditForm = ({ listing }: Props) => {
 
   //////////////////////////////////////////////////////////////
   const [colorSearchValue, setColorSearchValue] = useState("");
+  const colors = useStaticDataStore((s) => s.colors);
 
   const filteredColors = useMemo(() => {
     const q = colorSearchValue.trim().toLowerCase();
     if (!q) return [...colors];
-    return colors.filter((b) => b.toLowerCase().includes(q));
-  }, [colorSearchValue]);
+    return colors.filter((b) => b.color_name.toLowerCase().includes(q));
+  }, [colorSearchValue, colors]);
 
   const colorCollection = useMemo(
     () => createListCollection({ items: filteredColors }),
-    [filteredColors]
+    [filteredColors],
   );
   //////////////////////////////////////////////////////////////
+  const brands = useStaticDataStore((s) => s.brands);
+
   const [brandSearchValue, setBrandSearchValue] = useState("");
 
   const filteredBrands = useMemo(() => {
     const q = brandSearchValue.trim().toLowerCase();
     if (!q) return [...brands];
-    return brands.filter((b) => b.toLowerCase().includes(q));
-  }, [brandSearchValue]);
+    return brands.filter((b) => b.brand_name.toLowerCase().includes(q));
+  }, [brandSearchValue, brands]);
 
   const brandCollection = useMemo(
     () => createListCollection({ items: filteredBrands }),
-    [filteredBrands]
+    [filteredBrands],
   );
 
   //////////////////////////////////////////////////////////////
   const [carTypeSearchValue, setCarTypeSearchValue] = useState("");
+  const carTypes = useStaticDataStore((s) => s.carTypes);
 
   const filteredCarTypes = useMemo(() => {
     const q = carTypeSearchValue.trim().toLowerCase();
     if (!q) return [...carTypes];
-    return carTypes.filter((b) => b.toLowerCase().includes(q));
-  }, [carTypeSearchValue]);
+    return carTypes.filter((b) => b.car_type_name.toLowerCase().includes(q));
+  }, [carTypeSearchValue, carTypes]);
 
   const carTypeCollection = useMemo(
     () => createListCollection({ items: filteredCarTypes }),
-    [filteredCarTypes]
+    [filteredCarTypes],
   );
 
   //////////////////////////////////////////////////////////////
+
+  const conditions = useStaticDataStore((s) => s.conditions);
+
+  const cond = useMemo(
+    () => conditions.map((c) => c.condition_type),
+    [conditions],
+  );
+
+  ///////////////////////////////////////////////////////////////
 
   if (listing === null) return null;
 
@@ -171,8 +181,11 @@ const EditForm = ({ listing }: Props) => {
                       <Combobox.Empty>No brands found</Combobox.Empty>
 
                       {brandCollection.items.map((item) => (
-                        <Combobox.Item key={item} item={item}>
-                          {item}
+                        <Combobox.Item
+                          key={item.brand_name}
+                          item={item.brand_name}
+                        >
+                          {item.brand_name}
                           <Combobox.ItemIndicator />
                         </Combobox.Item>
                       ))}
@@ -219,8 +232,11 @@ const EditForm = ({ listing }: Props) => {
                       <Combobox.Empty>No colors found</Combobox.Empty>
 
                       {colorCollection.items.map((item) => (
-                        <Combobox.Item key={item} item={item}>
-                          {item}
+                        <Combobox.Item
+                          key={item.color_id}
+                          item={item.color_name}
+                        >
+                          {item.color_name}
                           <Combobox.ItemIndicator />
                         </Combobox.Item>
                       ))}
@@ -268,8 +284,11 @@ const EditForm = ({ listing }: Props) => {
                       <Combobox.Empty>No car types found</Combobox.Empty>
 
                       {carTypeCollection.items.map((item) => (
-                        <Combobox.Item key={item} item={item}>
-                          {item}
+                        <Combobox.Item
+                          key={item.car_type_id}
+                          item={item.car_type_name}
+                        >
+                          {item.car_type_name}
                           <Combobox.ItemIndicator />
                         </Combobox.Item>
                       ))}
@@ -297,7 +316,7 @@ const EditForm = ({ listing }: Props) => {
               <Select.Root
                 disabled={!edit}
                 name={field.name}
-                collection={createListCollection({ items: conditions })}
+                collection={createListCollection({ items: cond })}
                 value={field.value ? [field.value] : []}
                 onValueChange={({ value }) => field.onChange(value[0] ?? "")}
                 onInteractOutside={() => field.onBlur()}
@@ -318,8 +337,11 @@ const EditForm = ({ listing }: Props) => {
                     <Select.Content>
                       <Select.ItemGroup>
                         {conditions.map((condition) => (
-                          <Select.Item key={condition} item={condition}>
-                            {condition}
+                          <Select.Item
+                            key={condition.condition_id}
+                            item={condition.condition_type}
+                          >
+                            {condition.condition_type}
                             <Select.ItemIndicator />
                           </Select.Item>
                         ))}
@@ -402,7 +424,7 @@ const EditForm = ({ listing }: Props) => {
               maxLength={MAX_CHARACTERS}
               onChange={(e) => {
                 setDescriptionValue(
-                  e.currentTarget.value.slice(0, MAX_CHARACTERS)
+                  e.currentTarget.value.slice(0, MAX_CHARACTERS),
                 );
               }}
               size="xl"

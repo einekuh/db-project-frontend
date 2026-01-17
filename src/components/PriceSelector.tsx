@@ -1,4 +1,4 @@
-import useListingQueryStore from "@/listingQueryStore";
+import useListingQueryStore from "@/stores/listingQueryStore";
 import {
   Code,
   Heading,

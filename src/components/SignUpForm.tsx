@@ -7,26 +7,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import useSignUp from "@/hooks/useSignUp";
 
-async function isEmailAvailable(email: string): Promise<boolean> {
-  /* const res = await fetch(
+/* async function isEmailAvailable(email: string): Promise<boolean> {
+  const res = await fetch(
     `/api/auth/email-available?email=${encodeURIComponent(email)}` 
   );
   if (!res.ok) return false;
   const data = await res.json(); // { available: boolean }
-  return Boolean(data.available);*/
+  return Boolean(data.available);
   return true;
-}
+}*/
 
 const schema = z.object({
-  email: z
-    .string()
-    .trim()
-    .min(1, "Email is required")
-    .email("Invalid email")
-    .refine(async (email) => await isEmailAvailable(email), {
+  email: z.string().trim().min(1, "Email is required").email("Invalid email"),
+  /*.refine(async (email) => await isEmailAvailable(email), {
       message: "Email already exists",
-    }),
-  first_name: z.string().trim().min(1, "First name is required").max(50),
+    })*/ first_name: z.string().trim().min(1, "First name is required").max(50),
   last_name: z.string().trim().min(1, "Last name is required").max(50),
   password: z.string(),
   /*.min(8, "Password must be at least 8 characters")

@@ -1,11 +1,14 @@
-import useAuthStore from "@/authStore";
+import useAuthStore from "@/stores/authStore";
 import NavBar from "@/components/NavBar";
 import useMe from "@/hooks/useMe";
 import { Box } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
+import useStaticData from "@/hooks/useStaticData";
 
 const Layout = () => {
   const setStatus = useAuthStore((s) => s.setStatus);
+
+  useStaticData();
 
   const { isSuccess: isAuthenticated } = useMe(1);
 

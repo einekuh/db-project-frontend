@@ -1,4 +1,4 @@
-import useListingQueryStore from "@/listingQueryStore";
+import useListingQueryStore from "@/stores/listingQueryStore";
 import { Box, CloseButton, Input, InputGroup } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { BsSearch } from "react-icons/bs";

@@ -1,4 +1,4 @@
-import useAuthStore from "@/authStore";
+import useAuthStore from "@/stores/authStore";
 import UserListingsGrid from "@/components/UserListingsGrid";
 import { Box, Heading } from "@chakra-ui/react";
 

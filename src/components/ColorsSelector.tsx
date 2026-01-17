@@ -1,5 +1,5 @@
-import colors from "@/data/Colors";
-import useListingQueryStore from "@/listingQueryStore";
+import useListingQueryStore from "@/stores/listingQueryStore";
+import useStaticDataStore from "@/stores/staticDataStore";
 import {
   Badge,
   Combobox,
@@ -14,17 +14,19 @@ const ColorsSelector = () => {
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const setColors = useListingQueryStore((s) => s.setColors);
 
+  const colors = useStaticDataStore((s) => s.colors);
+
   const filteredItems = useMemo(
     () =>
       colors.filter((item) =>
-        item.toLowerCase().includes(searchValue.toLowerCase())
+        item.color_name.toLowerCase().includes(searchValue.toLowerCase()),
       ),
-    [searchValue]
+    [searchValue, colors],
   );
 
   const collection = useMemo(
     () => createListCollection({ items: filteredItems }),
-    [filteredItems]
+    [filteredItems],
   );
 
   const handleValueChange = (details: Combobox.ValueChangeDetails) => {
@@ -65,8 +67,8 @@ const ColorsSelector = () => {
           <Combobox.Content>
             <Combobox.ItemGroup>
               {filteredItems.map((item) => (
-                <Combobox.Item key={item} item={item}>
-                  {item}
+                <Combobox.Item key={item.color_id} item={item.color_name}>
+                  {item.color_name}
                   <Combobox.ItemIndicator />
                 </Combobox.Item>
               ))}

@@ -20,12 +20,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo, useState } from "react";
 
-import colors from "@/data/Colors";
-import brands from "@/data/Brands";
-import carTypes from "@/data/CarTypes";
-import conditions from "@/data/Conditions";
 import MyFileUpload from "./FileUpload";
-import { locations } from "@/data/Locations";
+import useStaticDataStore from "@/stores/staticDataStore";
 /*import LocationClient from "@/services/locationClient";
 import type { LocationResult } from "@/entities/LocationResult";
 import { CanceledError } from "axios";
@@ -47,6 +43,10 @@ const schema = z.object({
 type InsertFormData = z.infer<typeof schema>;
 
 const InsertForm = () => {
+  /////////////////////////////////////////////////////
+
+  /////////////////////////////////////////////////////
+
   const {
     register,
     //setValue,
@@ -73,25 +73,29 @@ const InsertForm = () => {
 
   //////////////////////////////////////////////////////////////
   const [searchValueColor, setSearchValueColor] = useState("");
+  const colors = useStaticDataStore((s) => s.colors);
 
   const filteredColors = useMemo(() => {
     const q = searchValueColor.trim().toLowerCase();
     if (!q) return [...colors];
-    return colors.filter((b) => b.toLowerCase().includes(q));
-  }, [searchValueColor]);
+    return colors.filter((b) => b.color_name.toLowerCase().includes(q));
+  }, [searchValueColor, colors]);
 
   const colorCollection = useMemo(
     () => createListCollection({ items: filteredColors }),
     [filteredColors],
   );
-  //////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////^
+
+  const brands = useStaticDataStore((s) => s.brands);
+
   const [searchValueBrand, setSearchValueBrand] = useState("");
 
   const filteredBrands = useMemo(() => {
     const q = searchValueBrand.trim().toLowerCase();
     if (!q) return [...brands];
-    return brands.filter((b) => b.toLowerCase().includes(q));
-  }, [searchValueBrand]);
+    return brands.filter((b) => b.brand_name.toLowerCase().includes(q));
+  }, [searchValueBrand, brands]);
 
   const brandCollection = useMemo(
     () => createListCollection({ items: filteredBrands }),
@@ -100,12 +104,13 @@ const InsertForm = () => {
 
   //////////////////////////////////////////////////////////////
   const [searchValueCarType, setSearchValueCarType] = useState("");
+  const carTypes = useStaticDataStore((s) => s.carTypes);
 
   const filteredCarTypes = useMemo(() => {
     const q = searchValueCarType.trim().toLowerCase();
     if (!q) return [...carTypes];
-    return carTypes.filter((b) => b.toLowerCase().includes(q));
-  }, [searchValueCarType]);
+    return carTypes.filter((b) => b.car_type_name.toLowerCase().includes(q));
+  }, [searchValueCarType, carTypes]);
 
   const carTypeCollection = useMemo(
     () => createListCollection({ items: filteredCarTypes }),
@@ -114,14 +119,27 @@ const InsertForm = () => {
 
   //////////////////////////////////////////////////////////////
 
+  const conditions = useStaticDataStore((s) => s.conditions);
+
+  const cond = useMemo(
+    () => conditions.map((c) => c.condition_type),
+    [conditions],
+  );
+
+  ///////////////////////////////////////////////////////////////
+
   //////////////////////////////////////////////////////////////
   const [searchValueLocation, setSearchValueLocation] = useState("");
+
+  const locations = useStaticDataStore((s) => s.locations);
 
   const filteredLocations = useMemo(() => {
     const q = searchValueLocation.trim().toLowerCase();
     if (!q) return [...locations];
-    return locations.filter((b) => b.toLowerCase().includes(q));
-  }, [searchValueLocation]);
+    return locations.filter(
+      (b) => b.city + ", " + b.country.toLowerCase().includes(q),
+    );
+  }, [searchValueLocation, locations]);
 
   const locationsCollection = useMemo(
     () => createListCollection({ items: filteredLocations }),
@@ -176,8 +194,11 @@ const InsertForm = () => {
                       <Combobox.Empty>No brands found</Combobox.Empty>
 
                       {brandCollection.items.map((item) => (
-                        <Combobox.Item key={item} item={item}>
-                          {item}
+                        <Combobox.Item
+                          key={item.brand_id}
+                          item={item.brand_name}
+                        >
+                          {item.brand_name}
                           <Combobox.ItemIndicator />
                         </Combobox.Item>
                       ))}
@@ -223,8 +244,11 @@ const InsertForm = () => {
                       <Combobox.Empty>No colors found</Combobox.Empty>
 
                       {colorCollection.items.map((item) => (
-                        <Combobox.Item key={item} item={item}>
-                          {item}
+                        <Combobox.Item
+                          key={item.color_id}
+                          item={item.color_name}
+                        >
+                          {item.color_name}
                           <Combobox.ItemIndicator />
                         </Combobox.Item>
                       ))}
@@ -270,8 +294,11 @@ const InsertForm = () => {
                       <Combobox.Empty>No car types found</Combobox.Empty>
 
                       {carTypeCollection.items.map((item) => (
-                        <Combobox.Item key={item} item={item}>
-                          {item}
+                        <Combobox.Item
+                          key={item.car_type_id}
+                          item={item.car_type_name}
+                        >
+                          {item.car_type_name}
                           <Combobox.ItemIndicator />
                         </Combobox.Item>
                       ))}
@@ -295,7 +322,7 @@ const InsertForm = () => {
             render={({ field }) => (
               <Select.Root
                 name={field.name}
-                collection={createListCollection({ items: conditions })}
+                collection={createListCollection({ items: cond })}
                 value={field.value ? [field.value] : []}
                 onValueChange={({ value }) => field.onChange(value[0] ?? "")}
                 onInteractOutside={() => field.onBlur()}
@@ -316,8 +343,11 @@ const InsertForm = () => {
                     <Select.Content>
                       <Select.ItemGroup>
                         {conditions.map((condition) => (
-                          <Select.Item key={condition} item={condition}>
-                            {condition}
+                          <Select.Item
+                            key={condition.condition_id}
+                            item={condition.condition_type}
+                          >
+                            {condition.condition_type}
                             <Select.ItemIndicator />
                           </Select.Item>
                         ))}
@@ -363,8 +393,11 @@ const InsertForm = () => {
                       <Combobox.Empty>No locations found</Combobox.Empty>
 
                       {locationsCollection.items.map((item) => (
-                        <Combobox.Item key={item} item={item}>
-                          {item}
+                        <Combobox.Item
+                          key={item.location_id}
+                          item={item.city + ", " + item.country}
+                        >
+                          {item.city + ", " + item.country}
                           <Combobox.ItemIndicator />
                         </Combobox.Item>
                       ))}

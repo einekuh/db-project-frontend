@@ -5,7 +5,7 @@ import ColorsSelector from "@/components/ColorsSelector";
 import ConditionsSelector from "@/components/ConditionsSelector";
 import LocationsSelector from "@/components/LocationsSelector";
 import PriceSelector from "@/components/PriceSelector";
-import useListingQueryStore from "@/listingQueryStore";
+import useListingQueryStore from "@/stores/listingQueryStore";
 import { Grid, GridItem } from "@chakra-ui/react";
 import { useEffect } from "react";
 

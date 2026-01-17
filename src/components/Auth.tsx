@@ -1,4 +1,4 @@
-import useAuthStore from "@/authStore";
+import useAuthStore from "@/stores/authStore";
 import useLogout from "@/hooks/useLogout";
 import { Box, Button, HStack } from "@chakra-ui/react";
 import { CgProfile } from "react-icons/cg";

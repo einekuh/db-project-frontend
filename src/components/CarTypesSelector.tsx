@@ -1,5 +1,5 @@
-import carTypes from "@/data/CarTypes";
-import useListingQueryStore from "@/listingQueryStore";
+import useListingQueryStore from "@/stores/listingQueryStore";
+import useStaticDataStore from "@/stores/staticDataStore";
 import {
   Badge,
   Combobox,
@@ -14,17 +14,19 @@ const CarTypesSelector = () => {
   const [selectedCarTypes, setSelectedCarTypes] = useState<string[]>([]);
   const setCarTypes = useListingQueryStore((s) => s.setCarTypes);
 
+  const carTypes = useStaticDataStore((s) => s.carTypes);
+
   const filteredItems = useMemo(
     () =>
       carTypes.filter((item) =>
-        item.toLowerCase().includes(searchValue.toLowerCase())
+        item.car_type_name.toLowerCase().includes(searchValue.toLowerCase()),
       ),
-    [searchValue]
+    [searchValue, carTypes],
   );
 
   const collection = useMemo(
     () => createListCollection({ items: filteredItems }),
-    [filteredItems]
+    [filteredItems],
   );
 
   const handleValueChange = (details: Combobox.ValueChangeDetails) => {
@@ -65,8 +67,8 @@ const CarTypesSelector = () => {
           <Combobox.Content>
             <Combobox.ItemGroup>
               {filteredItems.map((item) => (
-                <Combobox.Item key={item} item={item}>
-                  {item}
+                <Combobox.Item key={item.car_type_id} item={item.car_type_name}>
+                  {item.car_type_name}
                   <Combobox.ItemIndicator />
                 </Combobox.Item>
               ))}

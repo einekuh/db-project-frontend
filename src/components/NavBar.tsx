@@ -6,7 +6,7 @@ import ColorModeSwitch from "./ColorModeSwitch";
 import { CiSquarePlus } from "react-icons/ci";
 import SearchInput from "./SearchInput";
 import { IoMdHeartEmpty } from "react-icons/io";
-import useAuthStore from "@/authStore";
+import useAuthStore from "@/stores/authStore";
 import { BsChatSquareDots } from "react-icons/bs";
 import { LuTvMinimal } from "react-icons/lu";
 

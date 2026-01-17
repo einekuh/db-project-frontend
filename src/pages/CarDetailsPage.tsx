@@ -3,7 +3,6 @@ import CarPictures from "@/components/CarPictures";
 import ExpandableText from "@/components/ExpandableText";
 import { listingDetails } from "@/entities/Listing";
 import { Box, Text, Heading, HStack } from "@chakra-ui/react";
-import { Link as ChakraLink } from "@chakra-ui/react";
 
 import { Link, useParams } from "react-router-dom";
 import { FaRegPaperPlane } from "react-icons/fa";
@@ -31,12 +30,10 @@ const CarDetailsPage = () => {
           </Box>
           <Box mt={6}>
             <Link to="/chats">
-              <ChakraLink>
-                <HStack>
-                  <FaRegPaperPlane />
-                  <Text fontWeight="bold">Contact the Seller</Text>
-                </HStack>
-              </ChakraLink>
+              <HStack>
+                <FaRegPaperPlane />
+                <Text fontWeight="bold">Contact the Seller</Text>
+              </HStack>
             </Link>
           </Box>
           <Box mt={6}>

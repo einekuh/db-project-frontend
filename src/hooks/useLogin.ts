@@ -1,4 +1,4 @@
-import useAuthStore from "@/authStore";
+import useAuthStore from "@/stores/authStore";
 import type { UserLogin } from "@/entities/User";
 import APIClient from "@/services/api-Client";
 import { useMutation } from "@tanstack/react-query";

@@ -1,5 +1,5 @@
-import { locations } from "@/data/Locations";
-import useListingQueryStore from "@/listingQueryStore";
+import useListingQueryStore from "@/stores/listingQueryStore";
+import useStaticDataStore from "@/stores/staticDataStore";
 import {
   Badge,
   Combobox,
@@ -14,17 +14,22 @@ const LocationsSelector = () => {
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const setLocations = useListingQueryStore((s) => s.setLocations);
 
+  const locations = useStaticDataStore((s) => s.locations);
+
   const filteredItems = useMemo(
     () =>
-      locations.filter((item) =>
-        item.toLowerCase().includes(searchValue.toLowerCase())
+      locations.filter(
+        (item) =>
+          item.city +
+          ", " +
+          item.country.toLowerCase().includes(searchValue.toLowerCase()),
       ),
-    [searchValue]
+    [searchValue, locations],
   );
 
   const collection = useMemo(
     () => createListCollection({ items: filteredItems }),
-    [filteredItems]
+    [filteredItems],
   );
 
   const handleValueChange = (details: Combobox.ValueChangeDetails) => {
@@ -65,8 +70,11 @@ const LocationsSelector = () => {
           <Combobox.Content>
             <Combobox.ItemGroup>
               {filteredItems.map((item) => (
-                <Combobox.Item key={item} item={item}>
-                  {item}
+                <Combobox.Item
+                  key={item.location_id}
+                  item={item.city + ", " + item.country}
+                >
+                  {item.city + ", " + item.country}
                   <Combobox.ItemIndicator />
                 </Combobox.Item>
               ))}

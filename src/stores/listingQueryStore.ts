@@ -2,13 +2,12 @@ import { create } from "zustand";
 
 export interface ListingQuery {
   title?: string;
-  brands?: string[];
-  colors?: string[];
-  car_types?: string[];
-  price_range?: number[];
-  conditions?: string[];
-  fuel_types?: string[];
-  locations?: string[];
+  brand_ids?: number[];
+  color_ids?: number[];
+  car_type_ids?: number[];
+  price_range_ids?: number[];
+  condition_ids?: string[];
+  location_ids?: string[];
 }
 interface ListingQueryStore {
   listingQuery: ListingQuery;

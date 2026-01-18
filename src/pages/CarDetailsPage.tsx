@@ -1,14 +1,15 @@
 import CarAttributes from "@/components/CarAttributes";
 import CarPictures from "@/components/CarPictures";
 import ExpandableText from "@/components/ExpandableText";
-import { listingDetails } from "@/entities/Listing";
 import { Box, Text, Heading, HStack } from "@chakra-ui/react";
 
 import { Link, useParams } from "react-router-dom";
 import { FaRegPaperPlane } from "react-icons/fa";
+import { listingDetails } from "@/entities/Listing";
 const CarDetailsPage = () => {
   const { listing_id } = useParams();
-  const listing = listingDetails.find((l) => l.listing_id === listing_id);
+  const id = parseInt(listing_id!);
+  const listing = listingDetails.find((l) => l.listing_id === id);
   //if (error) throw error;
 
   return (

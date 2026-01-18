@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { type AxiosRequestConfig } from "axios";
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8000",
@@ -16,8 +16,15 @@ class APIClient<T = unknown> {
   post = (entity?: T) => {
     return axiosInstance.post(this.endpoint, entity).then((res) => res.data);
   };
-  get = () => {
-    return axiosInstance.get(this.endpoint).then((res) => res.data);
+
+  postPath = (entity?: T) => {
+    return axiosInstance
+      .post(this.endpoint + "/" + entity)
+      .then((res) => res.data);
+  };
+
+  get = (params?: AxiosRequestConfig) => {
+    return axiosInstance.get(this.endpoint, params).then((res) => res.data);
   };
   update = (payload?: T, id?: number) => {
     if (id) return axiosInstance.patch(this.endpoint + "/" + id, payload);

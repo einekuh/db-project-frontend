@@ -19,6 +19,8 @@ import type { Listing } from "@/entities/Listing";
 import { IoLocationOutline } from "react-icons/io5";
 import { TiEdit } from "react-icons/ti";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import useAddFavorite from "@/hooks/useAddFavorite";
+import useDeleteFavorite from "@/hooks/useDeleteFavorite";
 
 interface Props {
   listing: Listing;
@@ -27,6 +29,20 @@ interface Props {
 
 const CarCard = ({ listing, isUserListingCard }: Props) => {
   const [isLiked, setLiked] = useState(listing.isFavorite);
+
+  const addFavorite = useAddFavorite();
+  const deleteFavorite = useDeleteFavorite();
+
+  const handleFavorite = (listing_id: number) => {
+    if (isLiked) {
+      deleteFavorite.mutate(listing_id);
+      setLiked(false);
+    } else {
+      addFavorite.mutate(listing_id);
+      setLiked(true);
+    }
+  };
+
   const handleDelete = () => {
     //implement deleting logic
   };
@@ -145,7 +161,7 @@ const CarCard = ({ listing, isUserListingCard }: Props) => {
                   transition: "transform .15s ease-in",
                   cursor: "pointer",
                 }}
-                onClick={() => setLiked(!isLiked)}
+                onClick={() => handleFavorite(listing.listing_id)}
               >
                 {isLiked ? (
                   <IoMdHeart color="red" size={20} />

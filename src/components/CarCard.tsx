@@ -31,7 +31,7 @@ const CarCard = ({ listing, isUserListingCard }: Props) => {
   const [isLiked, setLiked] = useState(listing.isFavorite);
 
   const addFavorite = useAddFavorite();
-  const deleteFavorite = useDeleteFavorite();
+  const deleteFavorite = useDeleteFavorite(listing.listing_id);
 
   const handleFavorite = (listing_id: number) => {
     if (isLiked) {

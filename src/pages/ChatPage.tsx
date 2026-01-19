@@ -1,11 +1,19 @@
 import MessageCard from "@/components/MessageCard";
-import { messages } from "@/entities/Message";
-import { Box, Button, Input, InputGroup, ScrollArea } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Input,
+  InputGroup,
+  ScrollArea,
+  Spinner,
+} from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 
-import { useEffect } from "react";
-
-const myId = "1b2c3d4e-5f6a-7b8c-9d0e-1f2a3b4c5d6e";
+import { useEffect, useRef, useState } from "react";
+import useMessages from "@/hooks/useMessages";
+import useMe from "@/hooks/useMe";
+import useSendMessage from "@/hooks/useSendMessage";
+import type { Message } from "@/entities/Message";
 
 const ChatPage = () => {
   useEffect(() => {
@@ -16,6 +24,22 @@ const ChatPage = () => {
     };
   }, []);
   const { id } = useParams();
+
+  const chatId = parseInt(id!);
+
+  const sendMessage = useSendMessage();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const { data, error, isLoading } = useMessages(id!);
+  const [optimisticMessages, setOptimisticMessages] = useState<Message[]>(
+    data || [],
+  );
+  const { data: user, error: authError } = useMe(2);
+  const userId = user?.user_id;
+
+  if (authError) return authError.message;
+
+  if (error) return error.message;
 
   return (
     <Box>
@@ -38,27 +62,62 @@ const ChatPage = () => {
           }}
         >
           <ScrollArea.Content spaceY="4">
-            {messages
-              .filter((m) => m.chatId === id)
-              .map((message) => (
-                <MessageCard
-                  key={message.id}
-                  message={message}
-                  isMine={message.senderId === myId}
-                />
-              ))}
+            {isLoading ? (
+              <Box justifySelf="center" marginY="30%">
+                <Spinner />
+              </Box>
+            ) : (
+              optimisticMessages
+                ?.filter((m) => m.chat_id === chatId)
+                .map((message) => (
+                  <MessageCard
+                    key={message.message_id}
+                    message={message}
+                    isMine={message.sender_id === parseInt(userId!)}
+                  />
+                ))
+            )}
           </ScrollArea.Content>
         </ScrollArea.Viewport>
       </ScrollArea.Root>
 
       {/* Input */}
       <Box marginRight="3.5%">
-        <InputGroup>
-          <>
-            <Input placeholder="Type a message..." size="2xl" margin={3} />
-            <Button size="2xl">Send</Button>
-          </>
-        </InputGroup>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (inputRef.current && inputRef.current.value) {
+              setOptimisticMessages([
+                ...optimisticMessages,
+                {
+                  sender_id: parseInt(userId!),
+                  text: inputRef.current.value,
+                },
+              ]);
+              sendMessage.mutate({
+                chat_id: chatId,
+                text: inputRef.current.value,
+              });
+
+              inputRef.current.value = "";
+            }
+          }}
+        >
+          <InputGroup>
+            <>
+              <Input
+                ref={inputRef}
+                placeholder="Type a message..."
+                size="2xl"
+                margin={3}
+                type="text"
+              />
+              <Button size="2xl" type="submit">
+                Send
+              </Button>
+            </>
+          </InputGroup>
+        </form>
       </Box>
     </Box>
   );

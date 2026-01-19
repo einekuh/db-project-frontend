@@ -18,10 +18,10 @@ const ChatCard = ({ chat }: Props) => {
         cursor: "pointer",
       }}
       onClick={() => {
-        navigate(chat.id);
+        navigate(chat.chat_id);
       }}
     >
-      <Card.Root width="90%" overflow="hidden">
+      <Card.Root width="90%" overflow="hidden" height="100px">
         <Card.Body display="flex" flexDirection="column" gap={1} py={3}>
           <Heading size="sm" lineClamp={1}>
             {chat.title}

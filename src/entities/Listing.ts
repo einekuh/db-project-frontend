@@ -11,6 +11,16 @@ export interface Listing {
   images: string[];
   isFavorite: boolean;
 }
+export interface ListingCreate {
+  title: string;
+  brand: string;
+  color: string;
+  car_type: string;
+  condition: string;
+  location: string;
+  description: string;
+  price: number;
+}
 export interface ListingDetails {
   listing_id: number;
   creator_user_id: string;

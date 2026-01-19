@@ -1,7 +1,7 @@
 export default interface User {
   user_id?: string;
-  forename?: string;
-  surname?: string;
+  first_name?: string;
+  last_name?: string;
   email?: string;
   password?: string;
   created_at?: string;

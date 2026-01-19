@@ -1,15 +1,15 @@
-import { Card, Heading, HStack } from "@chakra-ui/react";
+import { Card, Skeleton, SkeletonText } from "@chakra-ui/react";
 
 const CarCardSkeleton = () => {
   return (
     <Card.Root height="220px">
       <Card.Header>
-        <HStack>
-          <Heading></Heading>
-        </HStack>
+        <Skeleton></Skeleton>
       </Card.Header>
       <Card.Body></Card.Body>
-      <Card.Footer></Card.Footer>
+      <Card.Footer>
+        <SkeletonText></SkeletonText>
+      </Card.Footer>
     </Card.Root>
   );
 };

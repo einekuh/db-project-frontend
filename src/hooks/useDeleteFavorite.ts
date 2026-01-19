@@ -1,11 +1,10 @@
 import APIClient from "@/services/api-Client";
 import { useMutation } from "@tanstack/react-query";
 
-const apiClient = new APIClient("/favorites");
-
-const useDeleteFavorite = () => {
+const useDeleteFavorite = (listing_id: number) => {
+  const apiClient = new APIClient(`/favorites/${listing_id}`);
   return useMutation({
-    mutationFn: (listing_id: number) => apiClient.postPath(listing_id),
+    mutationFn: apiClient.post,
   });
 };
 

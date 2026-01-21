@@ -9,8 +9,13 @@ import { IoMdHeartEmpty } from "react-icons/io";
 import useAuthStore from "@/stores/authStore";
 import { BsChatSquareDots } from "react-icons/bs";
 import { LuTvMinimal } from "react-icons/lu";
+import type User from "@/entities/User";
 
-const NavBar = () => {
+interface Props {
+  user?: User;
+}
+
+const NavBar = ({ user }: Props) => {
   const authStatus = useAuthStore((s) => s.authStatus);
   return (
     <Box background={{ _dark: "black", _light: "white" }}>
@@ -67,7 +72,7 @@ const NavBar = () => {
             cursor: "pointer",
           }}
         >
-          <Link to="/listings">
+          <Link to={`/${user?.user_id}/listings`}>
             <LuTvMinimal size={30} />
           </Link>
         </Box>

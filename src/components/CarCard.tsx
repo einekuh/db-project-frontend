@@ -48,7 +48,7 @@ const CarCard = ({ listing, isUserListingCard }: Props) => {
   };
   return (
     <Card.Root height="100%" width="100%" overflow="hidden">
-      <Link to={`/listings/details/${listing.listing_id}`}>
+      <Link to={`/listings/${listing.listing_id}/details`}>
         <Card.Header p={0} h="160px">
           {listing.images.length > 0 ? (
             listing.images.length < 2 ? (
@@ -92,7 +92,7 @@ const CarCard = ({ listing, isUserListingCard }: Props) => {
       <Card.Footer>
         {isUserListingCard ? (
           <>
-            <Link to={`/listings/edit/${listing.listing_id}`}>
+            <Link to={`/listings/${listing.listing_id}/edit`}>
               <Box
                 marginX={1}
                 _hover={{

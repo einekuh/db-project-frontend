@@ -2,12 +2,15 @@ import { Box, Card, Heading } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 import type { Chat } from "@/entities/Chat";
+import useAuthStore from "@/stores/authStore";
 
 interface Props {
   chat: Chat;
 }
 
 const ChatCard = ({ chat }: Props) => {
+  const user = useAuthStore((s) => s.user);
+
   const navigate = useNavigate();
   return (
     <Box
@@ -18,7 +21,7 @@ const ChatCard = ({ chat }: Props) => {
         cursor: "pointer",
       }}
       onClick={() => {
-        navigate(chat.chat_id);
+        navigate(`${user?.user_id}/${chat.chat_id}`);
       }}
     >
       <Card.Root width="90%" overflow="hidden" height="100px">

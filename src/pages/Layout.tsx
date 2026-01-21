@@ -7,17 +7,20 @@ import useStaticData from "@/hooks/useStaticData";
 
 const Layout = () => {
   const setStatus = useAuthStore((s) => s.setStatus);
-
+  const setUser = useAuthStore((s) => s.setUser);
   useStaticData();
 
-  const { isSuccess: isAuthenticated } = useMe(1);
+  const { data: user, isSuccess: isAuthenticated } = useMe(1);
 
-  if (isAuthenticated) setStatus("authenticated");
+  if (isAuthenticated) {
+    setStatus("authenticated");
+    setUser(user);
+  }
 
   return (
     <>
       <Box position="fixed" top="0" left="0" right="0" zIndex="1000">
-        <NavBar />
+        <NavBar user={user} />
       </Box>
 
       <Box pt="64px">

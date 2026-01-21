@@ -22,6 +22,7 @@ import { useMemo, useState } from "react";
 
 import MyFileUpload from "./FileUpload";
 import useStaticDataStore from "@/stores/staticDataStore";
+import useInsertCar from "@/hooks/useInsertCar";
 /*import LocationClient from "@/services/locationClient";
 import type { LocationResult } from "@/entities/LocationResult";
 import { CanceledError } from "axios";
@@ -33,7 +34,7 @@ const schema = z.object({
   title: z.string().min(1, "Title is required!"),
   brand: z.string({ message: "Brand is required!" }),
   color: z.string({ message: "Color is required!" }),
-  carType: z.string({ message: "Car type is required!" }),
+  car_type: z.string({ message: "Car type is required!" }),
   description: z.string().min(1, "Description is required!"),
   price: z.string({ message: "Price is required!" }),
   condition: z.string({ message: "Condition is required" }),
@@ -44,7 +45,7 @@ type InsertFormData = z.infer<typeof schema>;
 
 const InsertForm = () => {
   /////////////////////////////////////////////////////
-
+  const inserCar = useInsertCar();
   /////////////////////////////////////////////////////
 
   const {
@@ -66,7 +67,16 @@ const InsertForm = () => {
 */
   const navigate = useNavigate();
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
+    inserCar.mutate({
+      car_type: data.brand,
+      title: data.title,
+      price: parseInt(data.price),
+      description: data.description,
+      brand: data.brand,
+      condition: data.brand,
+      location: data.location,
+      color: data.color,
+    });
     navigate("/");
   });
   const [description, setDescription] = useState("");
@@ -261,14 +271,14 @@ const InsertForm = () => {
 
           <Field.ErrorText>{errors.color?.message as string}</Field.ErrorText>
         </Field.Root>
-        <Field.Root invalid={!!errors.carType} width={{ base: 300, md: 750 }}>
+        <Field.Root invalid={!!errors.car_type} width={{ base: 300, md: 750 }}>
           <Field.Label>
             <Heading>Car type</Heading>
           </Field.Label>
 
           <Controller
             control={control}
-            name="carType"
+            name="car_type"
             render={({ field }) => (
               <Combobox.Root
                 collection={carTypeCollection}
@@ -309,7 +319,9 @@ const InsertForm = () => {
             )}
           />
 
-          <Field.ErrorText>{errors.carType?.message as string}</Field.ErrorText>
+          <Field.ErrorText>
+            {errors.car_type?.message as string}
+          </Field.ErrorText>
         </Field.Root>
         <Field.Root invalid={!!errors.condition} width={{ base: 300, md: 750 }}>
           <Field.Label>

@@ -4,6 +4,7 @@ import { Box, Heading } from "@chakra-ui/react";
 
 const UserListingsPage = () => {
   const authStatus = useAuthStore((s) => s.authStatus);
+
   if (authStatus !== "authenticated")
     return (
       <Box textAlign="center" marginTop={100}>

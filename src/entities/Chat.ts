@@ -6,6 +6,10 @@ export interface Chat {
   lastMessagePreview: string;
 }
 
+export interface ChatCreate {
+  listing_id: string;
+}
+
 export const chats: Chat[] = [
   {
     chat_id: "2f3a1c7e-5a0b-4c2f-9b7a-3d9b7f1a2c10",

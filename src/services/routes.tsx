@@ -44,15 +44,15 @@ const router = createBrowserRouter([
         element: <InsertPage />,
       },
       {
-        path: "listings",
+        path: ":user_id/listings",
         element: <UserListingsPage />,
       },
       {
-        path: "listings/details/:listing_id",
+        path: "listings/:listing_id/details",
         element: <CarDetailsPage />,
       },
       {
-        path: "listings/edit/:listing_id",
+        path: "listings/:listing_id/edit",
         element: <EditListingPage />,
       },
       {
@@ -60,7 +60,7 @@ const router = createBrowserRouter([
         element: <ChatsPage />,
         children: [
           {
-            path: ":id",
+            path: ":user_id/:id",
             element: <ChatPage />,
           },
         ],

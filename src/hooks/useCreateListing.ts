@@ -4,10 +4,10 @@ import { useMutation } from "@tanstack/react-query";
 
 const apiClient = new APIClient("/listings");
 
-const useInsertCar = () => {
+const useCreateListing = () => {
   return useMutation({
     mutationFn: (listing: ListingCreate) => apiClient.post(listing),
   });
 };
 
-export default useInsertCar;
+export default useCreateListing;

@@ -17,8 +17,8 @@ const CarGrid = () => {
     <SimpleGrid padding={5} columns={{ sm: 1, md: 2, lg: 2, xl: 3 }}>
       {isLoading
         ? skeletons.map((s) => (
-            <CarCardContainer>
-              <CarCardSkeleton key={s} />
+            <CarCardContainer key={s}>
+              <CarCardSkeleton />
             </CarCardContainer>
           ))
         : data?.map((listing) => (

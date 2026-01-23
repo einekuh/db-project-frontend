@@ -1,20 +1,20 @@
 import CarAttributes from "@/components/CarAttributes";
 import CarPictures from "@/components/CarPictures";
 import ExpandableText from "@/components/ExpandableText";
-import { Box, Text, Heading, HStack } from "@chakra-ui/react";
+import { Box, Text, Heading, HStack, Spinner } from "@chakra-ui/react";
 
 import { Link, useParams } from "react-router-dom";
 import { FaRegPaperPlane } from "react-icons/fa";
-import { listingDetails } from "@/entities/Listing";
+import useListingDetails from "@/hooks/useListingDetails";
 const CarDetailsPage = () => {
   const { listing_id } = useParams();
   const id = parseInt(listing_id!);
-  const listing = listingDetails.find((l) => l.listing_id === id);
-  //if (error) throw error;
+  const { data: listing, error, isLoading } = useListingDetails(id);
+  if (error) throw error;
 
   return (
     <>
-      {/*isLoading && <Spinner />*/}
+      {isLoading && <Spinner />}
 
       <Box px={{ base: 4, md: 8 }} py={6}>
         <Box maxW="1100px" mx="auto">

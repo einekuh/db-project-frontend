@@ -22,7 +22,7 @@ import { useMemo, useState } from "react";
 
 import MyFileUpload from "./FileUpload";
 import useStaticDataStore from "@/stores/staticDataStore";
-import useInsertCar from "@/hooks/useInsertCar";
+import useCreateListing from "@/hooks/useCreateListing";
 /*import LocationClient from "@/services/locationClient";
 import type { LocationResult } from "@/entities/LocationResult";
 import { CanceledError } from "axios";
@@ -45,7 +45,7 @@ type InsertFormData = z.infer<typeof schema>;
 
 const InsertForm = () => {
   /////////////////////////////////////////////////////
-  const inserCar = useInsertCar();
+  const insertCar = useCreateListing();
   /////////////////////////////////////////////////////
 
   const {
@@ -67,15 +67,15 @@ const InsertForm = () => {
 */
   const navigate = useNavigate();
   const onSubmit = handleSubmit((data) => {
-    inserCar.mutate({
-      car_type: data.brand,
+    insertCar.mutate({
       title: data.title,
-      price: parseInt(data.price),
-      description: data.description,
       brand: data.brand,
+      color: data.color,
+      car_type: data.brand,
+      price: parseFloat(data.price.replace(/[^\d.-]/g, "")),
       condition: data.brand,
       location: data.location,
-      color: data.color,
+      description: data.description,
     });
     navigate("/");
   });
@@ -175,7 +175,6 @@ const InsertForm = () => {
           <Field.Label>
             <Heading>Brand</Heading>
           </Field.Label>
-
           <Controller
             control={control}
             name="brand"
@@ -197,12 +196,10 @@ const InsertForm = () => {
                     <Combobox.Trigger />
                   </Combobox.IndicatorGroup>
                 </Combobox.Control>
-
                 <Portal>
                   <Combobox.Positioner>
                     <Combobox.Content>
                       <Combobox.Empty>No brands found</Combobox.Empty>
-
                       {brandCollection.items.map((item) => (
                         <Combobox.Item
                           key={item.brand_id}
@@ -218,8 +215,7 @@ const InsertForm = () => {
               </Combobox.Root>
             )}
           />
-
-          <Field.ErrorText>{errors.brand?.message as string}</Field.ErrorText>
+          <Field.ErrorText>{errors.brand?.message}</Field.ErrorText>
         </Field.Root>
         <Field.Root invalid={!!errors.color} width={{ base: 300, md: 750 }}>
           <Field.Label>

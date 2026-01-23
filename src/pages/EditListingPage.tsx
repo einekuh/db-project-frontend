@@ -1,12 +1,11 @@
 import EditForm from "@/components/EditForm";
-import { listingDetails } from "@/entities/Listing";
+import useListingDetails from "@/hooks/useListingDetails";
 import { Box } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 
 const EditListingPage = () => {
   const { listing_id } = useParams();
-  const listing = listingDetails.find((l) => l.listing_id === listing_id);
-
+  const { data: listing } = useListingDetails(parseInt(listing_id!));
   return (
     <>
       <Box justifyItems="center">

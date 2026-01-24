@@ -22,7 +22,7 @@ import { useMemo, useState } from "react";
 import type { ListingDetails } from "@/entities/Listing";
 
 import CarThumbnails from "./CarThumbnails";
-import MyFileUpload from "./FileUpload";
+import MyFileUpload from "./MyFileUpload";
 import useStaticDataStore from "@/stores/staticDataStore";
 
 const MAX_CHARACTERS = 300;
@@ -54,12 +54,12 @@ const EditForm = ({ listing }: Props) => {
     resolver: zodResolver(schema),
     defaultValues: {
       title: listing?.title,
-      brand: listing?.car.brand,
-      color: listing?.car.color,
-      car_type: listing?.car.car_type,
-      description: listing?.description,
+      brand: listing?.car.brand_name,
+      color: listing?.car.color_name,
+      car_type: listing?.car.car_type_name,
+      description: listing?.car_description,
       price: listing?.price.toString(),
-      condition: listing?.car.condition,
+      condition: listing?.car.condition_type,
       location: listing?.location,
     },
   });
@@ -429,7 +429,7 @@ const EditForm = ({ listing }: Props) => {
               }}
               size="xl"
               disabled={!edit}
-              defaultValue={listing.description}
+              defaultValue={listing.car_description}
             />
           </InputGroup>
           <Field.ErrorText>{errors.description?.message}</Field.ErrorText>
@@ -458,12 +458,12 @@ const EditForm = ({ listing }: Props) => {
               setEdit(false);
               reset({
                 title: listing.title,
-                brand: listing.car.brand,
-                color: listing.car.color,
-                car_type: listing.car.car_type,
-                description: listing.description,
+                brand: listing.car.brand_name,
+                color: listing.car.color_name,
+                car_type: listing.car.car_type_name,
+                description: listing.car_description,
                 price: listing.price.toString(),
-                condition: listing.car.condition,
+                condition: listing.car.condition_type,
                 location: listing.location,
               });
             }}

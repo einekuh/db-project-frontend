@@ -35,7 +35,7 @@ const ChatPage = () => {
     data || [],
   );
   const { data: user, error: authError } = useMe(2);
-  const userId = user?.user_id;
+  const user_id = user?.id;
 
   if (authError) return authError.message;
 
@@ -73,7 +73,7 @@ const ChatPage = () => {
                   <MessageCard
                     key={message.message_id}
                     message={message}
-                    isMine={message.sender_id === parseInt(userId!)}
+                    isMine={message.sender_id === parseInt(user_id!)}
                   />
                 ))
             )}
@@ -90,7 +90,7 @@ const ChatPage = () => {
               setOptimisticMessages([
                 ...optimisticMessages,
                 {
-                  sender_id: parseInt(userId!),
+                  sender_id: parseInt(user_id!),
                   text: inputRef.current.value,
                 },
               ]);
@@ -98,7 +98,6 @@ const ChatPage = () => {
                 chat_id: chatId,
                 text: inputRef.current.value,
               });
-
               inputRef.current.value = "";
             }
           }}

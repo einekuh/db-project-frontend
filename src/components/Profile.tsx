@@ -44,12 +44,12 @@ const Profile = () => {
     updateUser.mutate(data);
   });
 
-  const { data, error, isLoading } = useMe(3);
+  const { data: user, error, isLoading } = useMe(3);
 
-  const delteUser = useDeleteUser();
+  const delteUser = useDeleteUser(parseInt(user?.id!));
 
   const handleDelete = () => {
-    delteUser.mutate(data.user_id);
+    delteUser.mutate();
   };
 
   /////////////////////////////////////////////////////////////////////////////////////
@@ -60,127 +60,131 @@ const Profile = () => {
 
   if (isLoading) return <Spinner />;
 
-  return (
-    <form onSubmit={onSubmit}>
-      <Heading marginY={16} fontSize="250%">
-        Your Profile!
-      </Heading>
-      <Stack gap="4" align="flex-start">
-        <Field.Root
-          invalid={!!errors.first_name}
-          width={{ base: 300, md: 750 }}
-        >
-          <Field.Label>
-            <Heading>First Name</Heading>
-          </Field.Label>
-          <Input
-            {...register("first_name")}
-            disabled={!edit}
-            defaultValue={data.first_name}
-            size="xl"
-          />
-          <Field.ErrorText>{errors.first_name?.message}</Field.ErrorText>
-        </Field.Root>
-
-        <Field.Root invalid={!!errors.last_name} width={{ base: 300, md: 750 }}>
-          <Field.Label>
-            <Heading>Last Name</Heading>
-          </Field.Label>
-          <Input
-            {...register("last_name")}
-            disabled={!edit}
-            defaultValue={data.last_name}
-            size="xl"
-          />
-          <Field.ErrorText>{errors.last_name?.message}</Field.ErrorText>
-        </Field.Root>
-
-        <Field.Root invalid={!!errors.email} width={{ base: 300, md: 750 }}>
-          <Field.Label>
-            <Heading>E-Mail</Heading>
-          </Field.Label>
-          <Input
-            {...register("email")}
-            disabled={!edit}
-            defaultValue={data.email}
-            size="xl"
-          />
-          <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
-        </Field.Root>
-
-        <HStack>
-          <Button
-            type="button"
-            onClick={() => setEdit(!edit)}
-            size="xl"
-            hidden={edit}
+  if (user)
+    return (
+      <form onSubmit={onSubmit}>
+        <Heading marginY={16} fontSize="250%">
+          Your Profile!
+        </Heading>
+        <Stack gap="4" align="flex-start">
+          <Field.Root
+            invalid={!!errors.first_name}
+            width={{ base: 300, md: 750 }}
           >
-            Edit
-          </Button>
-          <Button
-            type="submit"
-            onClick={() => setEdit(!edit)}
-            size="xl"
-            hidden={!edit}
+            <Field.Label>
+              <Heading>First Name</Heading>
+            </Field.Label>
+            <Input
+              {...register("first_name")}
+              disabled={!edit}
+              defaultValue={user.first_name}
+              size="xl"
+            />
+            <Field.ErrorText>{errors.first_name?.message}</Field.ErrorText>
+          </Field.Root>
+
+          <Field.Root
+            invalid={!!errors.last_name}
+            width={{ base: 300, md: 750 }}
           >
-            Submit
-          </Button>
-          <Button
-            size="xl"
-            type="reset"
-            hidden={!edit}
-            onClick={() => {
-              setEdit(!edit);
-            }}
-          >
-            Cancel
-          </Button>
-        </HStack>
-        <Box marginTop="10%">
-          <Dialog.Root motionPreset="slide-in-bottom" size="sm">
-            <Dialog.Trigger asChild>
-              <Button variant="outline" colorPalette="red">
-                Delete Account
-              </Button>
-            </Dialog.Trigger>
-            <Portal>
-              <Dialog.Backdrop />
-              <Dialog.Positioner>
-                <Dialog.Content>
-                  <Dialog.Header>
-                    <Dialog.Title>
-                      <Text>Delete</Text>
-                    </Dialog.Title>
-                  </Dialog.Header>
-                  <Dialog.Body>
-                    <Text>
-                      Do you really want to delete this listing? It will not be
-                      possible to restore it!
-                    </Text>
-                  </Dialog.Body>
-                  <Dialog.Footer>
-                    <Dialog.ActionTrigger asChild>
-                      <Button variant="outline">Cancel</Button>
-                    </Dialog.ActionTrigger>
-                    <Button
-                      variant="outline"
-                      colorPalette="red"
-                      onClick={handleDelete}
-                    >
-                      Delete
-                    </Button>
-                  </Dialog.Footer>
-                  <Dialog.CloseTrigger asChild>
-                    <CloseButton size="sm" />
-                  </Dialog.CloseTrigger>
-                </Dialog.Content>
-              </Dialog.Positioner>
-            </Portal>
-          </Dialog.Root>
-        </Box>
-      </Stack>
-    </form>
-  );
+            <Field.Label>
+              <Heading>Last Name</Heading>
+            </Field.Label>
+            <Input
+              {...register("last_name")}
+              disabled={!edit}
+              defaultValue={user.last_name}
+              size="xl"
+            />
+            <Field.ErrorText>{errors.last_name?.message}</Field.ErrorText>
+          </Field.Root>
+
+          <Field.Root invalid={!!errors.email} width={{ base: 300, md: 750 }}>
+            <Field.Label>
+              <Heading>E-Mail</Heading>
+            </Field.Label>
+            <Input
+              {...register("email")}
+              disabled={!edit}
+              defaultValue={user.email}
+              size="xl"
+            />
+            <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
+          </Field.Root>
+
+          <HStack>
+            <Button
+              type="button"
+              onClick={() => setEdit(!edit)}
+              size="xl"
+              hidden={edit}
+            >
+              Edit
+            </Button>
+            <Button
+              type="submit"
+              onClick={() => setEdit(!edit)}
+              size="xl"
+              hidden={!edit}
+            >
+              Submit
+            </Button>
+            <Button
+              size="xl"
+              type="reset"
+              hidden={!edit}
+              onClick={() => {
+                setEdit(!edit);
+              }}
+            >
+              Cancel
+            </Button>
+          </HStack>
+          <Box marginTop="10%">
+            <Dialog.Root motionPreset="slide-in-bottom" size="sm">
+              <Dialog.Trigger asChild>
+                <Button variant="outline" colorPalette="red">
+                  Delete Account
+                </Button>
+              </Dialog.Trigger>
+              <Portal>
+                <Dialog.Backdrop />
+                <Dialog.Positioner>
+                  <Dialog.Content>
+                    <Dialog.Header>
+                      <Dialog.Title>
+                        <Text>Delete</Text>
+                      </Dialog.Title>
+                    </Dialog.Header>
+                    <Dialog.Body>
+                      <Text>
+                        Do you really want to delete your account? It will not
+                        be possible to restore it!
+                      </Text>
+                    </Dialog.Body>
+                    <Dialog.Footer>
+                      <Dialog.ActionTrigger asChild>
+                        <Button variant="outline">Cancel</Button>
+                      </Dialog.ActionTrigger>
+                      <Button
+                        variant="outline"
+                        colorPalette="red"
+                        onClick={handleDelete}
+                      >
+                        Delete
+                      </Button>
+                    </Dialog.Footer>
+                    <Dialog.CloseTrigger asChild>
+                      <CloseButton size="sm" />
+                    </Dialog.CloseTrigger>
+                  </Dialog.Content>
+                </Dialog.Positioner>
+              </Portal>
+            </Dialog.Root>
+          </Box>
+        </Stack>
+      </form>
+    );
 };
 
 export default Profile;

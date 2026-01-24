@@ -1,11 +1,11 @@
 import ChatCard from "@/components/ChatCard";
 import ChatCardSkeleton from "@/components/ChatCardSkeleton";
-import useGetChats from "@/hooks/useGetChats";
+import useChats from "@/hooks/useChats";
 import { Box, GridItem, ScrollArea, SimpleGrid } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 
 const ChatsPage = () => {
-  const { data, error, isLoading } = useGetChats();
+  const { data, error, isLoading } = useChats();
 
   const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 

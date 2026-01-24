@@ -1,11 +1,11 @@
-import type { Listing } from "@/entities/Listing";
+import type {  ListingFavorite } from "@/entities/Listing";
 import APIClient from "@/services/api-Client";
 import { useQuery } from "@tanstack/react-query";
 
 const apiClient = new APIClient("/favorites/me");
 
 const useGetFavorites = () => {
-  return useQuery<Listing[], Error, Listing[]>({
+  return useQuery<ListingFavorite[], Error, ListingFavorite[]>({
     queryKey: ["favorites"],
     queryFn: () => apiClient.get(),
   });

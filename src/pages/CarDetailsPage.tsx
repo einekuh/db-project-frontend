@@ -3,13 +3,16 @@ import CarPictures from "@/components/CarPictures";
 import ExpandableText from "@/components/ExpandableText";
 import { Box, Text, Heading, HStack, Spinner } from "@chakra-ui/react";
 
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FaRegPaperPlane } from "react-icons/fa";
 import useListingDetails from "@/hooks/useListingDetails";
+import useCreateChat from "@/hooks/useCreateChat";
 const CarDetailsPage = () => {
   const { listing_id } = useParams();
   const id = parseInt(listing_id!);
   const { data: listing, error, isLoading } = useListingDetails(id);
+  const navigate = useNavigate();
+  const createChat = useCreateChat();
   if (error) throw error;
 
   return (
@@ -23,19 +26,23 @@ const CarDetailsPage = () => {
           </Heading>
 
           <ExpandableText maxChars={300}>
-            {listing?.description || ""}
+            {listing?.car_description || ""}
           </ExpandableText>
 
           <Box mt={6}>
             <CarAttributes car={listing?.car || null} />
           </Box>
-          <Box mt={6}>
-            <Link to="/chats">
-              <HStack>
-                <FaRegPaperPlane />
-                <Text fontWeight="bold">Contact the Seller</Text>
-              </HStack>
-            </Link>
+          <Box
+            mt={6}
+            onClick={() => {
+              createChat.mutate(listing?.listing_id!);
+              if (createChat.isSuccess) navigate;
+            }}
+          >
+            <HStack>
+              <FaRegPaperPlane />
+              <Text fontWeight="bold">Contact the Seller</Text>
+            </HStack>
           </Box>
           <Box mt={6}>
             <CarPictures images={listing?.images || null} />

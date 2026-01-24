@@ -28,14 +28,14 @@ interface Props {
 }
 
 const CarCard = ({ listing, isUserListingCard }: Props) => {
-  const [isLiked, setLiked] = useState(listing.isFavorite);
+  const [isLiked, setLiked] = useState(listing.is_favorite);
 
   const addFavorite = useAddFavorite();
   const deleteFavorite = useDeleteFavorite(listing.listing_id);
 
   const handleFavorite = (listing_id: number) => {
     if (isLiked) {
-      deleteFavorite.mutate(listing_id);
+      deleteFavorite.mutate();
       setLiked(false);
     } else {
       addFavorite.mutate(listing_id);
@@ -50,7 +50,7 @@ const CarCard = ({ listing, isUserListingCard }: Props) => {
     <Card.Root height="100%" width="100%" overflow="hidden">
       <Link to={`/listings/${listing.listing_id}/details`}>
         <Card.Header p={0} h="160px">
-          {listing.images.length > 0 ? (
+          {listing.images && listing.images.length > 0 ? (
             listing.images.length < 2 ? (
               <Box display="flex" h="100%">
                 <Image
@@ -169,10 +169,15 @@ const CarCard = ({ listing, isUserListingCard }: Props) => {
                   <IoMdHeartEmpty size={20} />
                 )}
               </Box>
-              <Box marginRight="10%">
-                <Text fontSize={18} fontWeight="bold">
-                  {listing.price} €
-                </Text>
+              <Box marginRight="20%">
+                <HStack>
+                  <Text fontSize={18} fontWeight="bold">
+                    {listing.price}
+                  </Text>{" "}
+                  <Text fontSize={18} fontWeight="bold">
+                    €
+                  </Text>
+                </HStack>
               </Box>
             </HStack>
             <Box>

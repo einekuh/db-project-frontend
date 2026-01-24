@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+"use client";
 import {
   Button,
   Combobox,
   createListCollection,
   Field,
+  FileUpload,
+  Float,
   Heading,
   Input,
   InputGroup,
@@ -20,9 +23,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo, useState } from "react";
 
-import MyFileUpload from "./FileUpload";
 import useStaticDataStore from "@/stores/staticDataStore";
 import useCreateListing from "@/hooks/useCreateListing";
+import { LuFileImage, LuX } from "react-icons/lu";
 /*import LocationClient from "@/services/locationClient";
 import type { LocationResult } from "@/entities/LocationResult";
 import { CanceledError } from "axios";
@@ -76,10 +79,13 @@ const InsertForm = () => {
       condition: data.brand,
       location: data.location,
       description: data.description,
+      images: files,
     });
     navigate("/");
   });
   const [description, setDescription] = useState("");
+
+  const [files, setFiles] = useState<File[]>([]);
 
   //////////////////////////////////////////////////////////////
   const [searchValueColor, setSearchValueColor] = useState("");
@@ -522,7 +528,41 @@ const InsertForm = () => {
           </InputGroup>
           <Field.ErrorText>{errors.description?.message}</Field.ErrorText>
         </Field.Root>
-        <MyFileUpload />
+
+        <FileUpload.Root
+          accept="image/*"
+          maxFiles={10}
+          onFileChange={(e) => setFiles([...e.acceptedFiles])}
+        >
+          <FileUpload.HiddenInput />
+          <FileUpload.Trigger asChild>
+            <Button variant="outline" size="sm">
+              <LuFileImage /> Upload Images
+            </Button>
+          </FileUpload.Trigger>
+          <FileUpload.ItemGroup>
+            {files.map((file) => (
+              <FileUpload.Item
+                w="auto"
+                boxSize="20"
+                p="2"
+                file={file}
+                key={file.name}
+              >
+                <FileUpload.ItemPreviewImage />
+                <Float placement="top-end">
+                  <FileUpload.ItemDeleteTrigger
+                    boxSize="4"
+                    layerStyle="fill.solid"
+                  >
+                    <LuX />
+                  </FileUpload.ItemDeleteTrigger>
+                </Float>
+              </FileUpload.Item>
+            ))}
+          </FileUpload.ItemGroup>
+        </FileUpload.Root>
+
         <Button type="submit" size="xl">
           Submit
         </Button>

@@ -1,11 +1,12 @@
 import APIClient from "@/services/api-Client";
 import { useMutation } from "@tanstack/react-query";
 
-const apiClient = new APIClient("/users");
 
-const useDeleteUser = () => {
+const useDeleteUser = (user_id: number) => {
+  const apiClient = new APIClient(`/users/${user_id}`);
+
   return useMutation({
-    mutationFn: (userId: number) => apiClient.delete(userId),
+    mutationFn: () => apiClient.delete(),
   });
 };
 

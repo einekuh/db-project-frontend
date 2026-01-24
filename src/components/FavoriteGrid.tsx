@@ -10,9 +10,9 @@ const FavoriteGrid = () => {
   return (
     <>
       <SimpleGrid padding="10px" columns={{ sm: 1, md: 2 }}>
-        {data?.map((listing) => (
-          <CarCardContainer key={listing.listing_id}>
-            <CarCard listing={listing} isUserListingCard={false} />
+        {data?.map((item) => (
+          <CarCardContainer key={item.listing.listing_id}>
+            <CarCard listing={item.listing} isUserListingCard={false} />
           </CarCardContainer>
         ))}
       </SimpleGrid>

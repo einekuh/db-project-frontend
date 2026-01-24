@@ -31,8 +31,8 @@ class APIClient<T = unknown> {
     return axiosInstance.patch(this.endpoint, payload);
   };
 
-  delete = (id?: number) => {
-    return axiosInstance.patch(this.endpoint + "/" + id);
+  delete = (entity?: T) => {
+    return axiosInstance.delete(this.endpoint);
   };
 
   login = (data: Record<string, string>) => {

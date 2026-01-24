@@ -4,10 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 
 const apiClient = new APIClient("/chats/me");
 
-const useGetChats = () =>
+const useChats = () =>
   useQuery<Chat[], Error, Chat[]>({
     queryKey: ["chats"],
     queryFn: apiClient.get,
   });
 
-export default useGetChats;
+export default useChats;

@@ -13,6 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import useMessages from "@/hooks/useMessages";
 import useMe from "@/hooks/useMe";
 import useSendMessage from "@/hooks/useSendMessage";
+import useChats from "@/hooks/useChats";
 import type { Message } from "@/entities/Message";
 
 const ChatPage = () => {
@@ -29,24 +30,57 @@ const ChatPage = () => {
 
   const sendMessage = useSendMessage();
   const inputRef = useRef<HTMLInputElement>(null);
+  const viewportRef = useRef<HTMLDivElement | null>(null);
 
   const { data, error, isLoading } = useMessages(id!);
   const [optimisticMessages, setOptimisticMessages] = useState<Message[]>([]);
+
+  useEffect(() => {
+    if (data?.messages) {
+      setOptimisticMessages(data.messages);
+    }
+  }, [data]);
   const { data: user, error: authError } = useMe(2);
   const user_id = user?.id;
+
+  const { data: chatsData } = useChats();
+  const currentChat = chatsData?.chats.find((c) => c.chat_id === chat_id);
+  const otherParticipant =
+    currentChat && user_id
+      ? currentChat.chat_participant_1.user_id === user_id
+        ? currentChat.chat_participant_2
+        : currentChat.chat_participant_1
+      : undefined;
+
+  // Scroll immer ans Ende, wenn neue Messages dazukommen
+  useEffect(() => {
+    if (!viewportRef.current) return;
+    const viewport = viewportRef.current;
+    viewport.scrollTo({ top: viewport.scrollHeight, behavior: "smooth" });
+  }, [optimisticMessages.length]);
 
   if (authError) return authError.message;
 
   if (error) return error.message;
 
-  if (data) setOptimisticMessages(data);
-
   return (
     <Box>
-      {/* Messages */}
-
-      <ScrollArea.Root height="83dvh" width="98%">
+      {otherParticipant && (
+        <Box
+          px={4}
+          py={3}
+          borderBottomWidth="1px"
+          borderColor="gray.700"
+          mb={2}
+        >
+          <Box fontSize="lg" fontWeight="semibold">
+            Chat with {otherParticipant.name}
+          </Box>
+        </Box>
+      )}
+      <ScrollArea.Root height="80dvh" width="98%">
         <ScrollArea.Viewport
+          ref={viewportRef}
           css={{
             "--scroll-shadow-size": "4rem",
             maskImage:
@@ -62,23 +96,28 @@ const ChatPage = () => {
           }}
         >
           <ScrollArea.Content spaceY="4">
-            {isLoading ? (
+            {isLoading && !data ? (
               <Box justifySelf="center" marginY="30%">
                 <Spinner />
               </Box>
             ) : (
               optimisticMessages
-                ?.filter((m) => m.chat_id === chat_id)
+                ?.filter((m) => !m.chat_id || m.chat_id === chat_id)
                 .map((message) => (
                   <MessageCard
-                    key={message.message_id}
+                    key={
+                      message.message_id ?? `${message.user_id}-${message.text}`
+                    }
                     message={message}
-                    isMine={message.sender_id === user_id!}
+                    isMine={message.user_id === user_id!}
                   />
                 ))
             )}
           </ScrollArea.Content>
         </ScrollArea.Viewport>
+        <ScrollArea.Scrollbar orientation="vertical">
+          <ScrollArea.Thumb />
+        </ScrollArea.Scrollbar>
       </ScrollArea.Root>
 
       {/* Input */}
@@ -87,11 +126,12 @@ const ChatPage = () => {
           onSubmit={(e) => {
             e.preventDefault();
             if (inputRef.current && inputRef.current.value) {
-              setOptimisticMessages([
-                ...optimisticMessages,
+              setOptimisticMessages((prev) => [
+                ...prev,
                 {
-                  sender_id: user_id!,
-                  text: inputRef.current.value,
+                  user_id: user_id!,
+                  text: inputRef.current!.value,
+                  chat_id,
                 },
               ]);
               sendMessage.mutate({

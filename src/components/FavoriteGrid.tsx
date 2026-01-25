@@ -2,15 +2,17 @@ import { SimpleGrid } from "@chakra-ui/react";
 
 import CarCardContainer from "./CarCardContainer";
 import CarCard from "./CarCard";
-import useGetFavorites from "@/hooks/useGetFavorites";
+import type { ListingFavorite } from "@/entities/Listing";
 
-const FavoriteGrid = () => {
-  const { data } = useGetFavorites();
+interface Props {
+  favorites: ListingFavorite[];
+}
 
+const FavoriteGrid = ({ favorites }: Props) => {
   return (
     <>
       <SimpleGrid padding="10px" columns={{ sm: 1, md: 2 }}>
-        {data?.map((item) => (
+        {favorites?.map((item) => (
           <CarCardContainer key={item.listing.listing_id}>
             <CarCard listing={item.listing} isUserListingCard={false} />
           </CarCardContainer>

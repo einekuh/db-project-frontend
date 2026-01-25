@@ -42,7 +42,13 @@ const CarDetailsPage = () => {
             >
               <HStack>
                 <FaRegPaperPlane />
-                <Text fontWeight="bold">Contact the Seller</Text>
+                <Text
+                  fontWeight="bold"
+                  cursor="pointer"
+                  _hover={{ textDecoration: "underline" }}
+                >
+                  Contact the Seller
+                </Text>
               </HStack>
             </Box>
             <Box mt={6}>

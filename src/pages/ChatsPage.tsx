@@ -1,11 +1,18 @@
 import ChatCard from "@/components/ChatCard";
 import ChatCardSkeleton from "@/components/ChatCardSkeleton";
 import useChats from "@/hooks/useChats";
-import { Box, GridItem, ScrollArea, SimpleGrid } from "@chakra-ui/react";
-import { Outlet } from "react-router-dom";
+import {
+  Box,
+  GridItem,
+  ScrollArea,
+  SimpleGrid,
+  Heading,
+} from "@chakra-ui/react";
+import { useOutlet } from "react-router-dom";
 
 const ChatsPage = () => {
   const { data, error, isLoading } = useChats();
+  const outlet = useOutlet();
 
   const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
@@ -14,7 +21,13 @@ const ChatsPage = () => {
   return (
     <SimpleGrid columns={{ base: 3, md: 5 }} gap={{ base: "24px", md: "40px" }}>
       <GridItem colSpan={{ base: 1, md: 1 }}>
-        <Box h="100vh" marginLeft={3}>
+        <Box
+          h="100vh"
+          marginLeft={3}
+          borderRightWidth="1px"
+          borderColor="gray.700"
+          pr={2}
+        >
           <ScrollArea.Root h="100%" variant="always">
             <ScrollArea.Viewport h="100%">
               <ScrollArea.Content paddingEnd="3" textStyle="sm">
@@ -25,12 +38,25 @@ const ChatsPage = () => {
                     ))}
               </ScrollArea.Content>
             </ScrollArea.Viewport>
-            <ScrollArea.Scrollbar />
+            <ScrollArea.Scrollbar orientation="vertical">
+              <ScrollArea.Thumb />
+            </ScrollArea.Scrollbar>
           </ScrollArea.Root>
         </Box>
       </GridItem>
       <GridItem colSpan={{ base: 2, md: 4 }}>
-        <Outlet />
+        {outlet ?? (
+          <Box
+            h="100vh"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Heading size="2xl" textAlign="center">
+              Start to Chat!
+            </Heading>
+          </Box>
+        )}
       </GridItem>
     </SimpleGrid>
   );

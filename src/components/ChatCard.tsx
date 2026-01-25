@@ -24,17 +24,14 @@ const ChatCard = ({ chat }: Props) => {
         navigate(`${chat.chat_id}`);
       }}
     >
-      <Card.Root width="90%" overflow="hidden" height="100px">
+      <Card.Root width="100%" overflow="hidden" height="75px">
         <Card.Body display="flex" flexDirection="column" gap={1} py={3}>
           <Heading size="sm" lineClamp={1}>
             {chat.chat_title}
           </Heading>
 
           <Box fontSize="sm" color="fg.muted" lineClamp={2}>
-            Chat with:{" "}
-            {chat.chat_participant_1.user_id === user?.id
-              ? chat.chat_participant_2.name
-              : chat.chat_participant_1.name}
+            {chat.last_message_preview}
           </Box>
         </Card.Body>
       </Card.Root>

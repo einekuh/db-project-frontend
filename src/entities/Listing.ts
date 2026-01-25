@@ -11,11 +11,11 @@ export interface Listing {
   is_favorite: boolean;
 }
 
-export interface ListingFavorite{
-  user_id: number,
-  listing: Listing
-  images: string[],
-  created_at: string
+export interface ListingFavorite {
+  user_id: number;
+  listing: Listing;
+  images: string[];
+  created_at: string;
 }
 export interface ListingCreate {
   title: string;
@@ -40,7 +40,7 @@ export interface ListingDetails {
   images: string[];
 }
 
-export interface ListingEdit{
+export interface ListingEdit {
   title?: string;
   brand?: string;
   color?: string;
@@ -58,6 +58,6 @@ export interface ListingEdit{
 }
 
 export interface UserListings {
-  user_id: 0,
-  listings: Listing[]
+  user_id: number;
+  listings: Listing[];
 }

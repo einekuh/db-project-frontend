@@ -2,11 +2,13 @@ import { SimpleGrid } from "@chakra-ui/react";
 import CarCardContainer from "./CarCardContainer";
 
 import CarCard from "./CarCard";
-import useUserListings from "@/hooks/useUserListings";
+import type { UserListings } from "@/entities/Listing";
 
-const UserListingsGrid = () => {
-  const { data } = useUserListings();
+interface Props {
+  data: UserListings;
+}
 
+const UserListingsGrid = ({ data }: Props) => {
   return (
     <>
       <SimpleGrid padding="10px" columns={{ sm: 1, md: 2 }}>

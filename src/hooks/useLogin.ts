@@ -4,6 +4,7 @@ import APIClient from "@/services/api-Client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
+// FastAPI Users JWT backend exposes login at POST /auth/jwt/login
 const apiClient = new APIClient<UserLogin>("/login");
 
 const useLogin = () => {

@@ -3,16 +3,18 @@ import CarPictures from "@/components/CarPictures";
 import ExpandableText from "@/components/ExpandableText";
 import { Box, Text, Heading, HStack, Spinner } from "@chakra-ui/react";
 
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FaRegPaperPlane } from "react-icons/fa";
 import useListingDetails from "@/hooks/useListingDetails";
 import useCreateChat from "@/hooks/useCreateChat";
+import useAuthStore from "@/stores/authStore";
 const CarDetailsPage = () => {
   const { listing_id } = useParams();
   const id = parseInt(listing_id!);
   const { data: listing, error, isLoading } = useListingDetails(id);
-
+  const navigate = useNavigate();
   const createChat = useCreateChat();
+  const user = useAuthStore((s) => s.user);
 
   if (error) throw error;
 
@@ -37,7 +39,20 @@ const CarDetailsPage = () => {
             <Box
               mt={6}
               onClick={() => {
-                createChat.mutate(listing.listing_id);
+                if (!listing) return;
+
+                const isOwner =
+                  user?.id !== undefined &&
+                  Number(listing.creator_user_id) === user.id;
+
+                if (isOwner && user?.id) {
+                  // Für eigene Listings: zur eigenen Chat-Übersicht navigieren,
+                  // statt einen neuen Chat mit sich selbst zu erstellen.
+                  navigate(`/chats/${user.id}`);
+                } else {
+                  // Für fremde Listings: wie bisher Chat für das Listing starten.
+                  createChat.mutate(listing.listing_id);
+                }
               }}
             >
               <HStack>
@@ -47,7 +62,11 @@ const CarDetailsPage = () => {
                   cursor="pointer"
                   _hover={{ textDecoration: "underline" }}
                 >
-                  Contact the Seller
+                  {user?.id !== undefined &&
+                  listing &&
+                  Number(listing.creator_user_id) === user.id
+                    ? "View your chats"
+                    : "Contact the Seller"}
                 </Text>
               </HStack>
             </Box>

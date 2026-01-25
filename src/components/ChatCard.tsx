@@ -2,15 +2,12 @@ import { Box, Card, Heading } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 import type { Chat } from "@/entities/Chat";
-import useAuthStore from "@/stores/authStore";
 
 interface Props {
   chat: Chat;
 }
 
 const ChatCard = ({ chat }: Props) => {
-  const user = useAuthStore((s) => s.user);
-
   const navigate = useNavigate();
   return (
     <Box

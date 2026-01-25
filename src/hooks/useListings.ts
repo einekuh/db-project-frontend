@@ -8,7 +8,9 @@ const apiClient = new APIClient("/listings");
 const useListings = (query: ListingQuery) => {
   return useQuery<Listing[], Error, Listing[]>({
     queryKey: ["listings", query],
-    queryFn: () => apiClient.get({ params: { content: query } }),
+    // send ListingQuery fields directly as query parameters so FastAPI's
+    // ListingSearch model can bind them correctly
+    queryFn: () => apiClient.get({ params: query }),
     retry: 0,
   });
 };

@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import useMe from "@/hooks/useMe";
 import useUpdateUser from "@/hooks/useUpdateUser";
 import useDeleteUser from "@/hooks/useDeleteUser";
+import useLogout from "@/hooks/useLogout";
 
 const schema = z.object({
   email: z.string(),
@@ -57,10 +58,24 @@ const Profile = () => {
     });
   }, [user, reset]);
 
-  const delteUser = useDeleteUser(user?.id);
+  const deleteUser = useDeleteUser();
+  const logout = useLogout();
 
   const handleDelete = () => {
-    delteUser.mutate();
+    deleteUser.mutate(undefined, {
+      onSuccess: () => {
+        // Backend returns 204 No Content on success and clears the cookie.
+        logout.mutate();
+      },
+      onError: (error: any) => {
+        const status = error?.response?.status;
+        const data = error?.response?.data;
+        // Temporäres Debugging: Status + Response loggen
+        // (im Browser in der Konsole sichtbar)
+        console.error("Delete account failed", { status, data });
+        alert(`Could not delete account. Status: ${status}`);
+      },
+    });
   };
 
   /////////////////////////////////////////////////////////////////////////////////////

@@ -1,47 +1,44 @@
-import {
-  Button,
-  FileUpload,
-  Float,
-  useFileUploadContext,
-} from "@chakra-ui/react";
+import { Button, FileUpload, Float } from "@chakra-ui/react";
 import { LuFileImage, LuX } from "react-icons/lu";
 
-const FileUploadList = () => {
-  const fileUpload = useFileUploadContext();
-  const files = fileUpload.acceptedFiles;
-  if (files.length === 0) return null;
-  return (
-    <FileUpload.ItemGroup>
-      {files.map((file) => (
-        <FileUpload.Item
-          w="auto"
-          boxSize="20"
-          p="2"
-          file={file}
-          key={file.name}
-        >
-          <FileUpload.ItemPreviewImage />
-          <Float placement="top-end">
-            <FileUpload.ItemDeleteTrigger boxSize="4" layerStyle="fill.solid">
-              <LuX />
-            </FileUpload.ItemDeleteTrigger>
-          </Float>
-        </FileUpload.Item>
-      ))}
-    </FileUpload.ItemGroup>
-  );
-};
+interface Props {
+  files: File[];
+  onFilesChange: (files: File[]) => void;
+  disabled?: boolean;
+}
 
-const MyFileUpload = () => {
+const MyFileUpload = ({ files, onFilesChange, disabled }: Props) => {
   return (
-    <FileUpload.Root accept="image/*" maxFiles={10}>
+    <FileUpload.Root
+      accept="image/*"
+      maxFiles={10}
+      onFileChange={(e) => onFilesChange([...e.acceptedFiles])}
+      disabled={disabled}
+    >
       <FileUpload.HiddenInput />
       <FileUpload.Trigger asChild>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" disabled={disabled}>
           <LuFileImage /> Upload Images
         </Button>
       </FileUpload.Trigger>
-      <FileUploadList />
+      <FileUpload.ItemGroup>
+        {files.map((file) => (
+          <FileUpload.Item
+            w="auto"
+            boxSize="20"
+            p="2"
+            file={file}
+            key={file.name}
+          >
+            <FileUpload.ItemPreviewImage />
+            <Float placement="top-end">
+              <FileUpload.ItemDeleteTrigger boxSize="4" layerStyle="fill.solid">
+                <LuX />
+              </FileUpload.ItemDeleteTrigger>
+            </Float>
+          </FileUpload.Item>
+        ))}
+      </FileUpload.ItemGroup>
     </FileUpload.Root>
   );
 };

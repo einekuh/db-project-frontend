@@ -23,6 +23,9 @@ import type { ListingDetails } from "@/entities/Listing";
 
 import CarThumbnails from "./CarThumbnails";
 import MyFileUpload from "./MyFileUpload";
+import useEditListing from "@/hooks/useEditListing";
+import useUploadListingImages from "@/hooks/useUploadListingImages";
+import useDeleteListingImages from "@/hooks/useDeleteListingImages";
 import useStaticDataStore from "@/stores/staticDataStore";
 
 const MAX_CHARACTERS = 300;
@@ -80,11 +83,54 @@ const EditForm = ({ listing }: Props) => {
   }, [listing, reset]);
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
+    if (!listing) return;
+
+    const payload = {
+      title: data.title,
+      brand: data.brand,
+      color: data.color,
+      car_type: data.car_type,
+      condition: data.condition,
+      location: data.location,
+      description: data.description,
+      price: parseFloat(data.price.replace(/[^\d.-]/g, "")),
+    };
+
+    editListing.mutate(payload, {
+      onSuccess: () => {
+        if (files.length > 0) {
+          uploadImages.mutate(files);
+        }
+        if (deletedImages.length > 0 && listing) {
+          deleteImages.mutate({ image_urls: deletedImages });
+        }
+
+        setEdit(false);
+        setFiles([]);
+        setDeletedImages([]);
+        setDescriptionValue(data.description.slice(0, MAX_CHARACTERS));
+      },
+    });
   });
 
   //////////////////////////////////////////////////////////////
   const [edit, setEdit] = useState(false);
+
+  const editListing = useEditListing(listing?.listing_id ?? 0);
+  const uploadImages = useUploadListingImages(listing?.listing_id ?? 0);
+  const deleteImages = useDeleteListingImages(listing?.listing_id ?? 0);
+
+  const [files, setFiles] = useState<File[]>([]);
+  const [currentImages, setCurrentImages] = useState<string[]>(
+    listing?.images ?? [],
+  );
+  const [deletedImages, setDeletedImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!listing) return;
+    setCurrentImages(listing.images ?? []);
+    setDeletedImages([]);
+  }, [listing]);
 
   //////////////////////////////////////////////////////////////
   const [descriptionValue, setDescriptionValue] = useState("");
@@ -455,8 +501,26 @@ const EditForm = ({ listing }: Props) => {
           </InputGroup>
           <Field.ErrorText>{errors.description?.message}</Field.ErrorText>
         </Field.Root>
-        <CarThumbnails images={listing.images} edit={edit} />
-        {edit ? <MyFileUpload /> : null}
+        <CarThumbnails
+          images={currentImages}
+          edit={edit}
+          onRemove={(index) => {
+            setCurrentImages((prev) => {
+              const url = prev[index];
+              if (url) {
+                setDeletedImages((removed) => [...removed, url]);
+              }
+              return prev.filter((_, i) => i !== index);
+            });
+          }}
+        />
+        {edit ? (
+          <MyFileUpload
+            files={files}
+            onFilesChange={setFiles}
+            disabled={!edit}
+          />
+        ) : null}
 
         <HStack>
           <Button
@@ -477,6 +541,9 @@ const EditForm = ({ listing }: Props) => {
             hidden={!edit}
             onClick={() => {
               setEdit(false);
+              setCurrentImages(listing.images ?? []);
+              setFiles([]);
+              setDescriptionValue(listing.car_description ?? "");
               reset({
                 title: listing.title,
                 brand: listing.car.brand_name,

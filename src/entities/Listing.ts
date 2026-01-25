@@ -49,11 +49,11 @@ export interface ListingEdit {
   location?: string;
   description?: string;
   price?: number;
-  brand_id: number;
-  color_id: number;
-  car_type_id: number;
-  condition_id: number;
-  location_id: number;
+  brand_id?: number;
+  color_id?: number;
+  car_type_id?: number;
+  condition_id?: number;
+  location_id?: number;
   images?: File[];
 }
 

@@ -4,6 +4,11 @@ const axiosInstance = axios.create({
   baseURL: "http://localhost:8000",
   withCredentials: true,
   params: {},
+  // Serialize array params without brackets so FastAPI list query params work:
+  // brand_ids=1&brand_ids=2 instead of brand_ids[]=1&brand_ids[]=2
+  paramsSerializer: {
+    indexes: null,
+  },
 });
 
 class APIClient<T = unknown> {
@@ -33,8 +38,8 @@ class APIClient<T = unknown> {
     return axiosInstance.patch(this.endpoint, payload);
   };
 
-  delete = (entity?: T) => {
-    return axiosInstance.delete(this.endpoint);
+  delete = () => {
+    return axiosInstance.delete(this.endpoint, { withCredentials: true });
   };
 
   login = (data: Record<string, string>) => {

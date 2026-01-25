@@ -3,6 +3,9 @@ import APIClient from "@/services/api-Client";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
+// FastAPI Users exposes the auth routes under /auth/{backend_name}/...
+// Our backend uses the JWT backend with name "jwt", so logout lives at
+// POST /auth/jwt/logout.
 const apiClient = new APIClient("/logout");
 
 const useLogout = () => {

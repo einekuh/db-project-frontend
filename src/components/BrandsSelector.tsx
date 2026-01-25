@@ -28,14 +28,15 @@ const BrandsSelector = () => {
       createListCollection({
         items: brands,
         itemToString: (item) => item.brand_name,
-        itemToValue: (item) => item.brand_name,
+        itemToValue: (item) => String(item.brand_id),
       }),
     [brands],
   );
 
   const handleValueChange = (details: Combobox.ValueChangeDetails) => {
     setSelectedBrands(details.value);
-    setBrands(details.value);
+    const ids = details.value.map((v) => Number(v));
+    setBrands(ids);
   };
   return (
     <Combobox.Root
@@ -52,9 +53,10 @@ const BrandsSelector = () => {
       size="lg"
     >
       <Wrap gap="2">
-        {selectedBrands.map((brand) => (
-          <Badge key={brand}>{brand}</Badge>
-        ))}
+        {selectedBrands.map((brandId) => {
+          const brand = brands.find((b) => b.brand_id === Number(brandId));
+          return <Badge key={brandId}>{brand?.brand_name ?? brandId}</Badge>;
+        })}
       </Wrap>
 
       <Combobox.Control>

@@ -31,14 +31,15 @@ const LocationsSelector = () => {
       createListCollection({
         items: locations,
         itemToString: (item) => `${item.city}, ${item.country}`,
-        itemToValue: (item) => `${item.city}, ${item.country}`,
+        itemToValue: (item) => String(item.location_id),
       }),
     [locations],
   );
 
   const handleValueChange = (details: Combobox.ValueChangeDetails) => {
     setSelectedLocations(details.value);
-    setLocations(details.value);
+    const ids = details.value.map((v) => Number(v));
+    setLocations(ids);
   };
   return (
     <Combobox.Root
@@ -55,9 +56,13 @@ const LocationsSelector = () => {
       size="lg"
     >
       <Wrap gap="2">
-        {selectedLocations.map((location) => (
-          <Badge key={location}>{location}</Badge>
-        ))}
+        {selectedLocations.map((locationId) => {
+          const loc = locations.find(
+            (l) => l.location_id === Number(locationId),
+          );
+          const label = loc ? `${loc.city}, ${loc.country}` : locationId;
+          return <Badge key={locationId}>{label}</Badge>;
+        })}
       </Wrap>
 
       <Combobox.Control>

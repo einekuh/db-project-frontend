@@ -31,14 +31,15 @@ const CarTypesSelector = () => {
       createListCollection({
         items: carTypes,
         itemToString: (item) => item.car_type_name,
-        itemToValue: (item) => item.car_type_name,
+        itemToValue: (item) => String(item.car_type_id),
       }),
     [carTypes],
   );
 
   const handleValueChange = (details: Combobox.ValueChangeDetails) => {
     setSelectedCarTypes(details.value);
-    setCarTypes(details.value);
+    const ids = details.value.map((v) => Number(v));
+    setCarTypes(ids);
   };
   return (
     <Combobox.Root
@@ -55,9 +56,10 @@ const CarTypesSelector = () => {
       size="lg"
     >
       <Wrap gap="2">
-        {selectedCarTypes.map((type) => (
-          <Badge key={type}>{type}</Badge>
-        ))}
+        {selectedCarTypes.map((typeId) => {
+          const type = carTypes.find((t) => t.car_type_id === Number(typeId));
+          return <Badge key={typeId}>{type?.car_type_name ?? typeId}</Badge>;
+        })}
       </Wrap>
 
       <Combobox.Control>

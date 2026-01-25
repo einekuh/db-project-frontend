@@ -8,7 +8,7 @@ const apiClient = new APIClient("/listings");
 const useListings = (query: ListingQuery) => {
   return useQuery<Listing[], Error, Listing[]>({
     queryKey: ["listings", query],
-    queryFn: () => apiClient.get({ params: { query: query } }),
+    queryFn: () => apiClient.get({ params: query }),
     retry: 0,
   });
 };

@@ -39,6 +39,8 @@ const ChatPage = () => {
 
   if (error) return error.message;
 
+  if (data) setOptimisticMessages(data);
+
   return (
     <Box>
       {/* Messages */}

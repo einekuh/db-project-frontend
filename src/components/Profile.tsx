@@ -57,7 +57,7 @@ const Profile = () => {
     });
   }, [user, reset]);
 
-  const delteUser = useDeleteUser(user?.id!);
+  const delteUser = useDeleteUser(user?.id);
 
   const handleDelete = () => {
     delteUser.mutate();

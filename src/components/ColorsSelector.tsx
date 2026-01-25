@@ -29,14 +29,15 @@ const ColorsSelector = () => {
       createListCollection({
         items: colors,
         itemToString: (item) => item.color_name,
-        itemToValue: (item) => item.color_name,
+        itemToValue: (item) => String(item.color_id),
       }),
     [colors],
   );
 
   const handleValueChange = (details: Combobox.ValueChangeDetails) => {
     setSelectedColors(details.value);
-    setColors(details.value);
+    const ids = details.value.map((v) => Number(v));
+    setColors(ids);
   };
   return (
     <Combobox.Root
@@ -53,9 +54,10 @@ const ColorsSelector = () => {
       size="lg"
     >
       <Wrap gap="2">
-        {selectedColors.map((color) => (
-          <Badge key={color}>{color}</Badge>
-        ))}
+        {selectedColors.map((colorId) => {
+          const color = colors.find((c) => c.color_id === Number(colorId));
+          return <Badge key={colorId}>{color?.color_name ?? colorId}</Badge>;
+        })}
       </Wrap>
 
       <Combobox.Control>

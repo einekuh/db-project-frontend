@@ -11,7 +11,7 @@ const ConditionsSelector = () => {
       createListCollection({
         items: conditions,
         itemToString: (item) => item.condition_type,
-        itemToValue: (item) => item.condition_type,
+        itemToValue: (item) => String(item.condition_id),
       }),
     [conditions],
   );
@@ -25,7 +25,8 @@ const ConditionsSelector = () => {
       value={selectedConditions}
       onValueChange={({ value }) => {
         setSelectedConditions(value);
-        setConditions(value);
+        const ids = value.map((v) => Number(v));
+        setConditions(ids);
       }}
       variant="subtle"
       marginTop={7}

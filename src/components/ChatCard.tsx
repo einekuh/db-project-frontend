@@ -31,7 +31,7 @@ const ChatCard = ({ chat }: Props) => {
           </Heading>
 
           <Box fontSize="sm" color="fg.muted" lineClamp={2}>
-            Chat with:
+            Chat with:{" "}
             {chat.chat_participant_1.user_id === user?.id
               ? chat.chat_participant_2.name
               : chat.chat_participant_1.name}

@@ -6,14 +6,14 @@ import { useMemo, useState } from "react";
 const ConditionsSelector = () => {
   const conditions = useStaticDataStore((s) => s.conditions);
 
-  const cond = useMemo(
-    () => conditions.map((c) => c.condition_type),
-    [conditions],
-  );
-
   const conditionCollection = useMemo(
-    () => createListCollection({ items: cond }),
-    [cond],
+    () =>
+      createListCollection({
+        items: conditions,
+        itemToString: (item) => item.condition_type,
+        itemToValue: (item) => item.condition_type,
+      }),
+    [conditions],
   );
 
   const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
@@ -25,7 +25,6 @@ const ConditionsSelector = () => {
       value={selectedConditions}
       onValueChange={({ value }) => {
         setSelectedConditions(value);
-        console.log(selectedConditions);
         setConditions(value);
       }}
       variant="subtle"
@@ -52,10 +51,7 @@ const ConditionsSelector = () => {
         <Select.Positioner>
           <Select.Content>
             {conditions.map((condition) => (
-              <Select.Item
-                key={condition.condition_id}
-                item={condition.condition_type}
-              >
+              <Select.Item key={condition.condition_id} item={condition}>
                 {condition.condition_type}
                 <Select.ItemIndicator />
               </Select.Item>

@@ -74,9 +74,9 @@ const InsertForm = () => {
       title: data.title,
       brand: data.brand,
       color: data.color,
-      car_type: data.brand,
+      car_type: data.car_type,
       price: parseFloat(data.price.replace(/[^\d.-]/g, "")),
-      condition: data.brand,
+      condition: data.condition,
       location: data.location,
       description: data.description,
       images: files,
@@ -98,7 +98,12 @@ const InsertForm = () => {
   }, [searchValueColor, colors]);
 
   const colorCollection = useMemo(
-    () => createListCollection({ items: filteredColors }),
+    () =>
+      createListCollection({
+        items: filteredColors,
+        itemToString: (item) => item.color_name,
+        itemToValue: (item) => item.color_name,
+      }),
     [filteredColors],
   );
   //////////////////////////////////////////////////////////////^
@@ -114,7 +119,12 @@ const InsertForm = () => {
   }, [searchValueBrand, brands]);
 
   const brandCollection = useMemo(
-    () => createListCollection({ items: filteredBrands }),
+    () =>
+      createListCollection({
+        items: filteredBrands,
+        itemToString: (item) => item.brand_name,
+        itemToValue: (item) => item.brand_name,
+      }),
     [filteredBrands],
   );
 
@@ -129,7 +139,12 @@ const InsertForm = () => {
   }, [searchValueCarType, carTypes]);
 
   const carTypeCollection = useMemo(
-    () => createListCollection({ items: filteredCarTypes }),
+    () =>
+      createListCollection({
+        items: filteredCarTypes,
+        itemToString: (item) => item.car_type_name,
+        itemToValue: (item) => item.car_type_name,
+      }),
     [filteredCarTypes],
   );
 
@@ -152,13 +167,18 @@ const InsertForm = () => {
   const filteredLocations = useMemo(() => {
     const q = searchValueLocation.trim().toLowerCase();
     if (!q) return [...locations];
-    return locations.filter(
-      (b) => b.city + ", " + b.country.toLowerCase().includes(q),
+    return locations.filter((b) =>
+      `${b.city}, ${b.country}`.toLowerCase().includes(q),
     );
   }, [searchValueLocation, locations]);
 
   const locationsCollection = useMemo(
-    () => createListCollection({ items: filteredLocations }),
+    () =>
+      createListCollection({
+        items: filteredLocations,
+        itemToString: (item) => `${item.city}, ${item.country}`,
+        itemToValue: (item) => `${item.city}, ${item.country}`,
+      }),
     [filteredLocations],
   );
 
@@ -207,10 +227,7 @@ const InsertForm = () => {
                     <Combobox.Content>
                       <Combobox.Empty>No brands found</Combobox.Empty>
                       {brandCollection.items.map((item) => (
-                        <Combobox.Item
-                          key={item.brand_id}
-                          item={item.brand_name}
-                        >
+                        <Combobox.Item key={item.brand_id} item={item}>
                           {item.brand_name}
                           <Combobox.ItemIndicator />
                         </Combobox.Item>
@@ -256,10 +273,7 @@ const InsertForm = () => {
                       <Combobox.Empty>No colors found</Combobox.Empty>
 
                       {colorCollection.items.map((item) => (
-                        <Combobox.Item
-                          key={item.color_id}
-                          item={item.color_name}
-                        >
+                        <Combobox.Item key={item.color_id} item={item}>
                           {item.color_name}
                           <Combobox.ItemIndicator />
                         </Combobox.Item>
@@ -306,10 +320,7 @@ const InsertForm = () => {
                       <Combobox.Empty>No car types found</Combobox.Empty>
 
                       {carTypeCollection.items.map((item) => (
-                        <Combobox.Item
-                          key={item.car_type_id}
-                          item={item.car_type_name}
-                        >
+                        <Combobox.Item key={item.car_type_id} item={item}>
                           {item.car_type_name}
                           <Combobox.ItemIndicator />
                         </Combobox.Item>
@@ -407,10 +418,7 @@ const InsertForm = () => {
                       <Combobox.Empty>No locations found</Combobox.Empty>
 
                       {locationsCollection.items.map((item) => (
-                        <Combobox.Item
-                          key={item.location_id}
-                          item={item.city + ", " + item.country}
-                        >
+                        <Combobox.Item key={item.location_id} item={item}>
                           {item.city + ", " + item.country}
                           <Combobox.ItemIndicator />
                         </Combobox.Item>

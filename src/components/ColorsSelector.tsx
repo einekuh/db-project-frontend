@@ -8,31 +8,35 @@ import {
   createListCollection,
 } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
+import useDebouncedValue from "@/hooks/useDebouncedValue";
 
 const ColorsSelector = () => {
   const [searchValue, setSearchValue] = useState("");
+  const debouncedSearch = useDebouncedValue(searchValue, 200);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const setColors = useListingQueryStore((s) => s.setColors);
 
   const colors = useStaticDataStore((s) => s.colors);
 
-  const filteredItems = useMemo(
-    () =>
-      colors.filter((item) =>
-        item.color_name.toLowerCase().includes(searchValue.toLowerCase()),
-      ),
-    [searchValue, colors],
-  );
+  const filteredItems = useMemo(() => {
+    const q = debouncedSearch.trim().toLowerCase();
+    if (!q) return colors;
+    return colors.filter((item) => item.color_name.toLowerCase().includes(q));
+  }, [debouncedSearch, colors]);
 
   const collection = useMemo(
-    () => createListCollection({ items: filteredItems }),
-    [filteredItems],
+    () =>
+      createListCollection({
+        items: colors,
+        itemToString: (item) => item.color_name,
+        itemToValue: (item) => item.color_name,
+      }),
+    [colors],
   );
 
   const handleValueChange = (details: Combobox.ValueChangeDetails) => {
     setSelectedColors(details.value);
     setColors(details.value);
-    console.log(selectedColors);
   };
   return (
     <Combobox.Root
@@ -67,7 +71,7 @@ const ColorsSelector = () => {
           <Combobox.Content>
             <Combobox.ItemGroup>
               {filteredItems.map((item) => (
-                <Combobox.Item key={item.color_id} item={item.color_name}>
+                <Combobox.Item key={item.color_id} item={item}>
                   {item.color_name}
                   <Combobox.ItemIndicator />
                 </Combobox.Item>

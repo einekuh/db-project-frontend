@@ -8,34 +8,37 @@ import {
   createListCollection,
 } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
+import useDebouncedValue from "@/hooks/useDebouncedValue";
 
 const LocationsSelector = () => {
   const [searchValue, setSearchValue] = useState("");
+  const debouncedSearch = useDebouncedValue(searchValue, 200);
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const setLocations = useListingQueryStore((s) => s.setLocations);
 
   const locations = useStaticDataStore((s) => s.locations);
 
-  const filteredItems = useMemo(
-    () =>
-      locations.filter(
-        (item) =>
-          item.city +
-          ", " +
-          item.country.toLowerCase().includes(searchValue.toLowerCase()),
-      ),
-    [searchValue, locations],
-  );
+  const filteredItems = useMemo(() => {
+    const q = debouncedSearch.trim().toLowerCase();
+    if (!q) return locations;
+    return locations.filter((item) =>
+      `${item.city}, ${item.country}`.toLowerCase().includes(q),
+    );
+  }, [debouncedSearch, locations]);
 
   const collection = useMemo(
-    () => createListCollection({ items: filteredItems }),
-    [filteredItems],
+    () =>
+      createListCollection({
+        items: locations,
+        itemToString: (item) => `${item.city}, ${item.country}`,
+        itemToValue: (item) => `${item.city}, ${item.country}`,
+      }),
+    [locations],
   );
 
   const handleValueChange = (details: Combobox.ValueChangeDetails) => {
     setSelectedLocations(details.value);
     setLocations(details.value);
-    console.log(selectedLocations);
   };
   return (
     <Combobox.Root
@@ -70,10 +73,7 @@ const LocationsSelector = () => {
           <Combobox.Content>
             <Combobox.ItemGroup>
               {filteredItems.map((item) => (
-                <Combobox.Item
-                  key={item.location_id}
-                  item={item.city + ", " + item.country}
-                >
+                <Combobox.Item key={item.location_id} item={item}>
                   {item.city + ", " + item.country}
                   <Combobox.ItemIndicator />
                 </Combobox.Item>

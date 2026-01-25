@@ -8,31 +8,37 @@ import {
   createListCollection,
 } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
+import useDebouncedValue from "@/hooks/useDebouncedValue";
 
 const CarTypesSelector = () => {
   const [searchValue, setSearchValue] = useState("");
+  const debouncedSearch = useDebouncedValue(searchValue, 200);
   const [selectedCarTypes, setSelectedCarTypes] = useState<string[]>([]);
   const setCarTypes = useListingQueryStore((s) => s.setCarTypes);
 
   const carTypes = useStaticDataStore((s) => s.carTypes);
 
-  const filteredItems = useMemo(
-    () =>
-      carTypes.filter((item) =>
-        item.car_type_name.toLowerCase().includes(searchValue.toLowerCase()),
-      ),
-    [searchValue, carTypes],
-  );
+  const filteredItems = useMemo(() => {
+    const q = debouncedSearch.trim().toLowerCase();
+    if (!q) return carTypes;
+    return carTypes.filter((item) =>
+      item.car_type_name.toLowerCase().includes(q),
+    );
+  }, [debouncedSearch, carTypes]);
 
   const collection = useMemo(
-    () => createListCollection({ items: filteredItems }),
-    [filteredItems],
+    () =>
+      createListCollection({
+        items: carTypes,
+        itemToString: (item) => item.car_type_name,
+        itemToValue: (item) => item.car_type_name,
+      }),
+    [carTypes],
   );
 
   const handleValueChange = (details: Combobox.ValueChangeDetails) => {
     setSelectedCarTypes(details.value);
     setCarTypes(details.value);
-    console.log(selectedCarTypes);
   };
   return (
     <Combobox.Root
@@ -67,7 +73,7 @@ const CarTypesSelector = () => {
           <Combobox.Content>
             <Combobox.ItemGroup>
               {filteredItems.map((item) => (
-                <Combobox.Item key={item.car_type_id} item={item.car_type_name}>
+                <Combobox.Item key={item.car_type_id} item={item}>
                   {item.car_type_name}
                   <Combobox.ItemIndicator />
                 </Combobox.Item>

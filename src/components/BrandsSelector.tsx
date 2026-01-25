@@ -8,30 +8,34 @@ import {
   createListCollection,
 } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
+import useDebouncedValue from "@/hooks/useDebouncedValue";
 
 const BrandsSelector = () => {
   const [searchValue, setSearchValue] = useState("");
+  const debouncedSearch = useDebouncedValue(searchValue, 200);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const setBrands = useListingQueryStore((s) => s.setBrands);
   const brands = useStaticDataStore((s) => s.brands);
 
-  const filteredItems = useMemo(
-    () =>
-      brands.filter((b) =>
-        b.brand_name.toLowerCase().includes(searchValue.toLowerCase()),
-      ),
-    [searchValue, brands],
-  );
+  const filteredItems = useMemo(() => {
+    const q = debouncedSearch.trim().toLowerCase();
+    if (!q) return brands;
+    return brands.filter((b) => b.brand_name.toLowerCase().includes(q));
+  }, [debouncedSearch, brands]);
 
   const collection = useMemo(
-    () => createListCollection({ items: filteredItems }),
-    [filteredItems],
+    () =>
+      createListCollection({
+        items: brands,
+        itemToString: (item) => item.brand_name,
+        itemToValue: (item) => item.brand_name,
+      }),
+    [brands],
   );
 
   const handleValueChange = (details: Combobox.ValueChangeDetails) => {
     setSelectedBrands(details.value);
     setBrands(details.value);
-    console.log(selectedBrands);
   };
   return (
     <Combobox.Root
@@ -66,7 +70,7 @@ const BrandsSelector = () => {
           <Combobox.Content>
             <Combobox.ItemGroup>
               {filteredItems.map((item) => (
-                <Combobox.Item key={item.brand_id} item={item.brand_name}>
+                <Combobox.Item key={item.brand_id} item={item}>
                   {item.brand_name}
                   <Combobox.ItemIndicator />
                 </Combobox.Item>

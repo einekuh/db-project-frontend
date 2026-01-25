@@ -5,7 +5,9 @@ export type Message = {
   text: string;
   created_at?: string;
 };
-export type MessageCreate = {
+export interface MessageCreate {
   chat_id: number;
-  text: string;
-};
+  user_id: number;
+  content: string;
+  message_type: "user" | "system";
+}

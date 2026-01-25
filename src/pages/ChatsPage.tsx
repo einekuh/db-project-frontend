@@ -20,7 +20,7 @@ const ChatsPage = () => {
               <ScrollArea.Content paddingEnd="3" textStyle="sm">
                 {isLoading
                   ? skeletons.map((s) => <ChatCardSkeleton key={s} />)
-                  : data?.map((chat) => (
+                  : data?.chats.map((chat) => (
                       <ChatCard key={chat.chat_id} chat={chat} />
                     ))}
               </ScrollArea.Content>

@@ -25,15 +25,13 @@ const ChatPage = () => {
   }, []);
   const { id } = useParams();
 
-  const chatId = parseInt(id!);
+  const chat_id = parseInt(id!);
 
   const sendMessage = useSendMessage();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { data, error, isLoading } = useMessages(id!);
-  const [optimisticMessages, setOptimisticMessages] = useState<Message[]>(
-    data || [],
-  );
+  const [optimisticMessages, setOptimisticMessages] = useState<Message[]>([]);
   const { data: user, error: authError } = useMe(2);
   const user_id = user?.id;
 
@@ -68,12 +66,12 @@ const ChatPage = () => {
               </Box>
             ) : (
               optimisticMessages
-                ?.filter((m) => m.chat_id === chatId)
+                ?.filter((m) => m.chat_id === chat_id)
                 .map((message) => (
                   <MessageCard
                     key={message.message_id}
                     message={message}
-                    isMine={message.sender_id === parseInt(user_id!)}
+                    isMine={message.sender_id === user_id!}
                   />
                 ))
             )}
@@ -90,13 +88,16 @@ const ChatPage = () => {
               setOptimisticMessages([
                 ...optimisticMessages,
                 {
-                  sender_id: parseInt(user_id!),
+                  sender_id: user_id!,
                   text: inputRef.current.value,
                 },
               ]);
               sendMessage.mutate({
-                chat_id: chatId,
-                text: inputRef.current.value,
+                chat_id: chat_id,
+                user_id: user_id!,
+
+                content: inputRef.current.value,
+                message_type: "user",
               });
               inputRef.current.value = "";
             }

@@ -5,8 +5,8 @@ import { useMutation } from "@tanstack/react-query";
 const apiClient = new APIClient("/listings");
 
 const useCreateListing = () => {
-  return useMutation({
-    mutationFn: (listing: ListingCreate) => apiClient.post(listing),
+  return useMutation<ListingCreate, Error, ListingCreate>({
+    mutationFn: (listing: ListingCreate) => apiClient.post(listing, {headers: { "Content-Type": "multipart/form-data" }}),
   });
 };
 

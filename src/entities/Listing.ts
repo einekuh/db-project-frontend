@@ -40,6 +40,23 @@ export interface ListingDetails {
   images: string[];
 }
 
+export interface ListingEdit{
+  title?: string;
+  brand?: string;
+  color?: string;
+  car_type?: string;
+  condition?: string;
+  location?: string;
+  description?: string;
+  price?: number;
+  brand_id: number;
+  color_id: number;
+  car_type_id: number;
+  condition_id: number;
+  location_id: number;
+  images?: File[];
+}
+
 export interface UserListings {
   user_id: 0,
   listings: Listing[]

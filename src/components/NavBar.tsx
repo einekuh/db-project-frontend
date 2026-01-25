@@ -35,7 +35,7 @@ const NavBar = ({ user }: Props) => {
               cursor: "pointer",
             }}
           >
-            <Link to="/chats">
+            <Link to={`/chats/${user?.id}`}>
               <BsChatSquareDots size={30} />
             </Link>
           </Box>
@@ -72,7 +72,7 @@ const NavBar = ({ user }: Props) => {
             cursor: "pointer",
           }}
         >
-          <Link to={`/${user?.user_id}/listings`}>
+          <Link to={`/${user?.id}/listings`}>
             <LuTvMinimal size={30} />
           </Link>
         </Box>

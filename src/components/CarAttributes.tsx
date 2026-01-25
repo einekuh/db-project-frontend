@@ -21,7 +21,7 @@ const CarAttributes = ({ car }: Props) => {
           <Text fontSize="130%" fontWeight="bold">
             Type:{" "}
           </Text>{" "}
-          <Text fontSize="130%">{car.car_type_name}</Text>
+          <Text fontSize="130%">{car.car_type}</Text>
         </HStack>
       </Box>
       <Box marginY={3}>

@@ -17,7 +17,7 @@ import {
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import type { ListingDetails } from "@/entities/Listing";
 
@@ -56,13 +56,28 @@ const EditForm = ({ listing }: Props) => {
       title: listing?.title,
       brand: listing?.car.brand_name,
       color: listing?.car.color_name,
-      car_type: listing?.car.car_type_name,
+      car_type: listing?.car.car_type,
       description: listing?.car_description,
       price: listing?.price.toString(),
       condition: listing?.car.condition_type,
       location: listing?.location,
     },
   });
+
+  // Ensure form values are populated once listing data is loaded asynchronously
+  useEffect(() => {
+    if (!listing) return;
+    reset({
+      title: listing.title,
+      brand: listing.car.brand_name,
+      color: listing.car.color_name,
+      car_type: listing.car.car_type,
+      description: listing.car_description,
+      price: listing.price.toString(),
+      condition: listing.car.condition_type,
+      location: listing.location,
+    });
+  }, [listing, reset]);
 
   const onSubmit = handleSubmit((data) => {
     console.log(data);
@@ -85,7 +100,12 @@ const EditForm = ({ listing }: Props) => {
   }, [colorSearchValue, colors]);
 
   const colorCollection = useMemo(
-    () => createListCollection({ items: filteredColors }),
+    () =>
+      createListCollection({
+        items: filteredColors,
+        itemToString: (item) => item.color_name,
+        itemToValue: (item) => item.color_name,
+      }),
     [filteredColors],
   );
   //////////////////////////////////////////////////////////////
@@ -100,7 +120,12 @@ const EditForm = ({ listing }: Props) => {
   }, [brandSearchValue, brands]);
 
   const brandCollection = useMemo(
-    () => createListCollection({ items: filteredBrands }),
+    () =>
+      createListCollection({
+        items: filteredBrands,
+        itemToString: (item) => item.brand_name,
+        itemToValue: (item) => item.brand_name,
+      }),
     [filteredBrands],
   );
 
@@ -115,7 +140,12 @@ const EditForm = ({ listing }: Props) => {
   }, [carTypeSearchValue, carTypes]);
 
   const carTypeCollection = useMemo(
-    () => createListCollection({ items: filteredCarTypes }),
+    () =>
+      createListCollection({
+        items: filteredCarTypes,
+        itemToString: (item) => item.car_type_name,
+        itemToValue: (item) => item.car_type_name,
+      }),
     [filteredCarTypes],
   );
 
@@ -181,10 +211,7 @@ const EditForm = ({ listing }: Props) => {
                       <Combobox.Empty>No brands found</Combobox.Empty>
 
                       {brandCollection.items.map((item) => (
-                        <Combobox.Item
-                          key={item.brand_name}
-                          item={item.brand_name}
-                        >
+                        <Combobox.Item key={item.brand_name} item={item}>
                           {item.brand_name}
                           <Combobox.ItemIndicator />
                         </Combobox.Item>
@@ -232,10 +259,7 @@ const EditForm = ({ listing }: Props) => {
                       <Combobox.Empty>No colors found</Combobox.Empty>
 
                       {colorCollection.items.map((item) => (
-                        <Combobox.Item
-                          key={item.color_id}
-                          item={item.color_name}
-                        >
+                        <Combobox.Item key={item.color_id} item={item}>
                           {item.color_name}
                           <Combobox.ItemIndicator />
                         </Combobox.Item>
@@ -284,10 +308,7 @@ const EditForm = ({ listing }: Props) => {
                       <Combobox.Empty>No car types found</Combobox.Empty>
 
                       {carTypeCollection.items.map((item) => (
-                        <Combobox.Item
-                          key={item.car_type_id}
-                          item={item.car_type_name}
-                        >
+                        <Combobox.Item key={item.car_type_id} item={item}>
                           {item.car_type_name}
                           <Combobox.ItemIndicator />
                         </Combobox.Item>
@@ -460,7 +481,7 @@ const EditForm = ({ listing }: Props) => {
                 title: listing.title,
                 brand: listing.car.brand_name,
                 color: listing.car.color_name,
-                car_type: listing.car.car_type_name,
+                car_type: listing.car.car_type,
                 description: listing.car_description,
                 price: listing.price.toString(),
                 condition: listing.car.condition_type,

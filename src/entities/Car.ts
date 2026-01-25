@@ -3,5 +3,5 @@ export interface Car {
   brand_name: string;
   color_name: string;
   condition_type: string;
-  car_type_name: string;
+  car_type: string;
 }

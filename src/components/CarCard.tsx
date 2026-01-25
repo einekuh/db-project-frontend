@@ -21,6 +21,7 @@ import { TiEdit } from "react-icons/ti";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import useAddFavorite from "@/hooks/useAddFavorite";
 import useDeleteFavorite from "@/hooks/useDeleteFavorite";
+import useDeleteListing from "@/hooks/useDelteListing";
 
 interface Props {
   listing: Listing;
@@ -32,6 +33,7 @@ const CarCard = ({ listing, isUserListingCard }: Props) => {
 
   const addFavorite = useAddFavorite();
   const deleteFavorite = useDeleteFavorite(listing.listing_id);
+  const deleteLisitng = useDeleteListing(listing.listing_id);
 
   const handleFavorite = (listing_id: number) => {
     if (isLiked) {
@@ -44,7 +46,7 @@ const CarCard = ({ listing, isUserListingCard }: Props) => {
   };
 
   const handleDelete = () => {
-    //implement deleting logic
+    deleteLisitng.mutate();
   };
   return (
     <Card.Root height="100%" width="100%" overflow="hidden">

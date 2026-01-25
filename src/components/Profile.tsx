@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useMe from "@/hooks/useMe";
 import useUpdateUser from "@/hooks/useUpdateUser";
 import useDeleteUser from "@/hooks/useDeleteUser";
@@ -34,6 +34,7 @@ const Profile = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<ProfileFormData>({ resolver: zodResolver(schema) });
   const [edit, setEdit] = useState(false);
 
@@ -46,7 +47,17 @@ const Profile = () => {
 
   const { data: user, error, isLoading } = useMe(3);
 
-  const delteUser = useDeleteUser(parseInt(user?.id!));
+  // Sync form values with the currently loaded user
+  useEffect(() => {
+    if (!user) return;
+    reset({
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
+    });
+  }, [user, reset]);
+
+  const delteUser = useDeleteUser(user?.id!);
 
   const handleDelete = () => {
     delteUser.mutate();
@@ -74,12 +85,7 @@ const Profile = () => {
             <Field.Label>
               <Heading>First Name</Heading>
             </Field.Label>
-            <Input
-              {...register("first_name")}
-              disabled={!edit}
-              defaultValue={user.first_name}
-              size="xl"
-            />
+            <Input {...register("first_name")} disabled={!edit} size="xl" />
             <Field.ErrorText>{errors.first_name?.message}</Field.ErrorText>
           </Field.Root>
 
@@ -90,12 +96,7 @@ const Profile = () => {
             <Field.Label>
               <Heading>Last Name</Heading>
             </Field.Label>
-            <Input
-              {...register("last_name")}
-              disabled={!edit}
-              defaultValue={user.last_name}
-              size="xl"
-            />
+            <Input {...register("last_name")} disabled={!edit} size="xl" />
             <Field.ErrorText>{errors.last_name?.message}</Field.ErrorText>
           </Field.Root>
 
@@ -103,12 +104,7 @@ const Profile = () => {
             <Field.Label>
               <Heading>E-Mail</Heading>
             </Field.Label>
-            <Input
-              {...register("email")}
-              disabled={!edit}
-              defaultValue={user.email}
-              size="xl"
-            />
+            <Input {...register("email")} disabled={!edit} size="xl" />
             <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
           </Field.Root>
 

@@ -13,8 +13,8 @@ class APIClient<T = unknown> {
     this.endpoint = endpoint;
   }
 
-  post = (entity?: T) => {
-    return axiosInstance.post(this.endpoint, entity).then((res) => res.data);
+  post = (data?: T, params?: AxiosRequestConfig) => {
+    return axiosInstance.post(this.endpoint, data, params).then((res) => res.data);
   };
 
   postPath = (entity?: T) => {

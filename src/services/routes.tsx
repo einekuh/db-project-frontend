@@ -56,11 +56,11 @@ const router = createBrowserRouter([
         element: <EditListingPage />,
       },
       {
-        path: "chats/",
+        path: "chats/:user_id/",
         element: <ChatsPage />,
         children: [
           {
-            path: ":user_id/:id",
+            path: ":id",
             element: <ChatPage />,
           },
         ],

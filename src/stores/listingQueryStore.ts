@@ -17,7 +17,6 @@ interface ListingQueryStore {
   setColors: (car_type: number[]) => void;
   setPriceRange: (price_range: number[]) => void;
   setConditions: (condition: number[]) => void;
-  setFuelTypes: (fuel_type: number[]) => void;
   setLocations: (locations: number[]) => void;
 }
 
@@ -39,8 +38,6 @@ const useListingQueryStore = create<ListingQueryStore>((set) => ({
     set((store) => ({
       listingQuery: { ...store.listingQuery, condition_ids: condition },
     })),
-  setFuelTypes: (fuel_type: number[]) =>
-    set((store) => ({ listingQuery: { ...store.listingQuery, fuel_type } })),
   setLocations: (locations: number[]) =>
     set((store) => ({
       listingQuery: { ...store.listingQuery, locations_ids: locations },

@@ -1,6 +1,5 @@
 import CarAttributes from "@/components/CarAttributes";
 import CarPictures from "@/components/CarPictures";
-import ExpandableText from "@/components/ExpandableText";
 import { Box, Text, Heading, HStack, Spinner } from "@chakra-ui/react";
 
 import { useNavigate, useParams } from "react-router-dom";
@@ -29,9 +28,7 @@ const CarDetailsPage = () => {
               {listing?.title}
             </Heading>
 
-            <ExpandableText maxChars={300}>
-              {listing?.car_description}
-            </ExpandableText>
+            <Text fontSize="130%">{listing?.car_description}</Text>
 
             <Box mt={6}>
               <CarAttributes car={listing.car} />

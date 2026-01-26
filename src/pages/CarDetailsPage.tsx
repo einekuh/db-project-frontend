@@ -38,6 +38,13 @@ const CarDetailsPage = () => {
               onClick={() => {
                 if (!listing) return;
 
+                if (!user?.id) {
+                  alert(
+                    "You are not logged in. Please log in to contact the seller.",
+                  );
+                  return;
+                }
+
                 const isOwner =
                   user?.id !== undefined &&
                   Number(listing.creator_user_id) === user.id;

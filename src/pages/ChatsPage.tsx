@@ -16,18 +16,25 @@ const ChatsPage = () => {
 
   const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
+  const hasChats = (data?.chats?.length ?? 0) > 0;
+  const noChats = !isLoading && !hasChats;
+
   if (error) return error.message;
+
+  if (noChats) {
+    return (
+      <Box h="100vh" display="flex" alignItems="center" justifyContent="center">
+        <Heading size="5xl" textAlign="center">
+          You don't have any chats yet!
+        </Heading>
+      </Box>
+    );
+  }
 
   return (
     <SimpleGrid columns={{ base: 3, md: 5 }} gap={{ base: "24px", md: "40px" }}>
       <GridItem colSpan={{ base: 1, md: 1 }}>
-        <Box
-          h="100vh"
-          marginLeft={3}
-          borderRightWidth="1px"
-          borderColor="gray.700"
-          pr={2}
-        >
+        <Box h="100vh" marginLeft={3} pr={2}>
           <ScrollArea.Root h="100%" variant="always">
             <ScrollArea.Viewport h="100%">
               <ScrollArea.Content paddingEnd="3" textStyle="sm">

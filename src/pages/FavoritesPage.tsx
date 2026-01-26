@@ -24,7 +24,16 @@ const FavoritesPage = () => {
               <FavoriteGrid favorites={data} />
             </>
           ) : (
-            <Heading>You don't have any Favorites yet!</Heading>
+            <Box
+              h="100vh"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Heading size="5xl" textAlign="center">
+                You don't have any favorites yet!
+              </Heading>
+            </Box>
           )}
         </Box>
       </>
